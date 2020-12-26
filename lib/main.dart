@@ -1,10 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_konda/introSlider.dart';
+import 'package:flutter_konda/login_page.dart';
 import 'package:flutter_konda/welcome.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_konda/home.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -40,8 +42,8 @@ class _HomePageState extends State<HomePage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
-    Timer(Duration(seconds: 3), ()=>Navigator.pushReplacement(
-        context,  MaterialPageRoute(builder: (context)=>IntroScreen())));
+    Timer(Duration(seconds: 0), ()=>Navigator.push(
+        context,  MaterialPageRoute(builder: (context)=>LoginPage())));
   }
 
   @override
@@ -59,5 +61,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+
   }
+
 }

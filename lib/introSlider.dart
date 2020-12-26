@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_konda/home.dart';
+import 'package:flutter_konda/login_page.dart';
 import 'package:flutter_konda/welcome.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -16,8 +18,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MySharedPreferences.instance
-          .getBooleanValue("firstTimeOpen") != false ? WelcomeScreen() : IntroScreen(),
+      home:
+          MySharedPreferences.instance.getBooleanValue("firstTimeOpen") != false
+              ? WelcomeScreen()
+              : IntroScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -29,7 +33,6 @@ class IntroScreen extends StatefulWidget {
   @override
   IntroScreenState createState() => new IntroScreenState();
 }
-
 
 //------------------ Custom your own tabs ------------------
 class IntroScreenState extends State<IntroScreen> {
@@ -44,8 +47,8 @@ class IntroScreenState extends State<IntroScreen> {
     MySharedPreferences.instance
         .getBooleanValue("firstTimeOpen")
         .then((value) => setState(() {
-      isFirstTimeOpen = value;
-    }));
+              isFirstTimeOpen = value;
+            }));
   }
 
   @override
@@ -56,56 +59,59 @@ class IntroScreenState extends State<IntroScreen> {
     ));
     slides.add(
       new Slide(
-        title: "SCHOOL",
+        backgroundColor: Colors.black,
+        title: "Silver Package",
         styleTitle: TextStyle(
-            color: Color(0xff3da4ab),
+            color: Colors.grey,
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+            "",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_school.png",
+        pathImage: "",
       ),
     );
     slides.add(
       new Slide(
-        title: "MUSEUM",
+        backgroundColor: Colors.black,
+        title: "Gold Package",
         styleTitle: TextStyle(
-            color: Color(0xff3da4ab),
+            color: Colors.amber,
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-        "Ye indulgence unreserved connection alteration appearance",
+            "",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_museum.png",
+        pathImage: "",
       ),
     );
     slides.add(
       new Slide(
-        title: "COFFEE SHOP",
+        backgroundColor: Colors.black,
+        title: "Platinum Package",
         styleTitle: TextStyle(
             color: Color(0xff3da4ab),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-        "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
+            '',
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_coffee_shop.png",
+        pathImage: "",
       ),
     );
   }
@@ -114,7 +120,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.pushReplacement(
-        context,  MaterialPageRoute(builder: (context)=>WelcomeScreen()));
+        context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   void onTabChangeCompleted(index) {
@@ -156,11 +162,11 @@ class IntroScreenState extends State<IntroScreen> {
             children: <Widget>[
               GestureDetector(
                   child: Image.asset(
-                    currentSlide.pathImage,
-                    width: 200.0,
-                    height: 200.0,
-                    fit: BoxFit.contain,
-                  )),
+                currentSlide.pathImage,
+                width: 200.0,
+                height: 200.0,
+                fit: BoxFit.contain,
+              )),
               Container(
                 child: Text(
                   currentSlide.title,
@@ -190,7 +196,6 @@ class IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     return new IntroSlider(
-
       // List slides
       slides: this.slides,
 
@@ -228,4 +233,3 @@ class IntroScreenState extends State<IntroScreen> {
     );
   }
 }
-
