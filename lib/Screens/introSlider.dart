@@ -1,31 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_konda/home.dart';
-import 'package:flutter_konda/login_page.dart';
-import 'package:flutter_konda/welcome.dart';
+import 'package:konda/Screens//welcome.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:intro_slider/scrollbar_behavior_enum.dart';
-
-import 'my_shared_preferance.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'login_page.dart';
+import 'package:konda/Service/my_shared_preferance.dart';
 
 //import 'package:intro_slider_example/home.dart';
 
-void main() => runApp(new MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home:
-          MySharedPreferences.instance.getBooleanValue("firstTimeOpen") != false
-              ? WelcomeScreen()
-              : IntroScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+Future<void> main() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  var launch = preferences.getBool('launch');
+  runApp(MaterialApp(home: launch == null ? IntroScreen() : LoginPage()));
 }
+
 
 class IntroScreen extends StatefulWidget {
   IntroScreen({Key key}) : super(key: key);
@@ -41,26 +33,21 @@ class IntroScreenState extends State<IntroScreen> {
   Function goToTab;
 // This widget is the root of your application.
 
-  bool isFirstTimeOpen = false;
-
-  IntroScreenState() {
-    MySharedPreferences.instance
-        .getBooleanValue("firstTimeOpen")
-        .then((value) => setState(() {
-              isFirstTimeOpen = value;
-            }));
+  Future checkFirstTimeLaunch()async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool('launch', true);
   }
-
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
+    checkFirstTimeLaunch();
     slides.add(
       new Slide(
         backgroundColor: Colors.black,
-        title: "Silver Package",
+        title: "Welcome to Konda Player ",
         styleTitle: TextStyle(
             color: Colors.grey,
             fontSize: 30.0,
@@ -79,7 +66,7 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       new Slide(
         backgroundColor: Colors.black,
-        title: "Gold Package",
+        title: "Watch and Enjoys Movies, Series, And Many More...",
         styleTitle: TextStyle(
             color: Colors.amber,
             fontSize: 30.0,
@@ -98,7 +85,7 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       new Slide(
         backgroundColor: Colors.black,
-        title: "Platinum Package",
+        title: "One Place for Different Entertainment",
         styleTitle: TextStyle(
             color: Color(0xff3da4ab),
             fontSize: 30.0,
@@ -120,7 +107,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home()));
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   void onTabChangeCompleted(index) {

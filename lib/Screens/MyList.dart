@@ -26,19 +26,19 @@ class _MyListState extends State<MyList> {
         backgroundColor: Colors.black,
         title: Text('My List', style: TextStyle(color: Colors.white),),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: (){},
+      //   child: Icon(Icons.add),
+      // ),
       body: FutureBuilder<List>(
         future: getData(),
         // ignore: missing_return
-        builder: (ctx,ss){
+        builder: (ctx,ss) {
           if(ss.hasError)
-            {
-              print('error');
-            }
-          if(ss.hasData){
+          {
+            print('error');
+          }
+          else if(ss.hasData){
             return Items(list:ss.data);
           }
           else{

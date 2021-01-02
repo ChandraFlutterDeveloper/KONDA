@@ -1,6 +1,0 @@
-34.74.230.131
-konda_user
-Konda@7890
-
-root
-Konda@7890@db

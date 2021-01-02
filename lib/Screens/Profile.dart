@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-class Forget extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  _ForgetState createState() => _ForgetState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _ForgetState extends State<Forget> {
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Container();

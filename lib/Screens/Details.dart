@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:konda/main.dart';
+import 'package:konda/Home.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Details extends StatefulWidget {
   @override
@@ -8,6 +11,11 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
+  Future<List> getData() async {
+    final response = await http.get("https://konda.co.in/Movie_List");
+    return json.decode(response.body);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +29,7 @@ class _DetailsState extends State<Details> {
                     SizedBox(
                       height: 250,
                       width: 150,
-                      child: Image.asset('assets/images/img5.jpg'),
+                      child: Image.network('assets/images/img5.jpg'),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -148,15 +156,11 @@ class _DetailsState extends State<Details> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.pushReplacement(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Homepage()));
               },
             ),
           )
-        ]
-        )
-    );
+        ]));
   }
 }
-
-

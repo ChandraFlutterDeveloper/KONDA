@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Search extends StatefulWidget {
   @override
@@ -6,6 +9,11 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  Future<List> getData() async {
+    final response = await http.get("https://konda.co.in/Movie_List");
+    return json.decode(response.body);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

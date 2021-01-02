@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:konda/Home.dart';
 
 void main() => runApp(App());
 
@@ -11,17 +12,17 @@ class App extends StatelessWidget{
           primaryColor: Color(0xFFFB415B),
           fontFamily: "Ubuntu"
       ),
-      home: LoginPage(),
+      home: Register(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget{
+class Register extends StatefulWidget{
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginPageState extends State<LoginPage>{
+class _RegisterState extends State<Register>{
 
   bool _isHidden = true;
 
@@ -40,17 +41,10 @@ class _LoginPageState extends State<LoginPage>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Konda',
-              style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Pacifico"
-              ),
-            ),
+
             SizedBox(height: 40.0,),
             Text(
-              "LOGIN",
+              "Register Yourself",
               style: TextStyle(
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
@@ -58,21 +52,16 @@ class _LoginPageState extends State<LoginPage>{
               ),
             ),
             SizedBox(height: 40.0,),
-            buildTextField("Enter Your Mobile No.,"),
+            buildTextField("Enter Your Name,"),
             SizedBox(height: 20.0,),
-            buildTextField("Enter OTP"),
+            buildTextField("Enter Email"),
+            SizedBox(height: 20.0,),
+            buildTextField("Enter Mobile No"),
             SizedBox(height: 20.0,),
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    "Resend_OTP",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
+                children: <Widget>[],
               ),
             ),
             SizedBox(height: 50.0),
@@ -83,10 +72,9 @@ class _LoginPageState extends State<LoginPage>{
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
-                    Text("Don't have an account?"),
+                    Text("Have an account?"),
                     SizedBox(width: 10.0,),
-                    Text("SIGN UP", style: TextStyle(color: Theme.of(context).primaryColor,))
+                    Text("Sign In", style: TextStyle(color: Theme.of(context).primaryColor,))
                   ],
                 ),
               ),
@@ -119,27 +107,30 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   Widget buildButtonContainer(){
+    Navigator.push(
+        context,  MaterialPageRoute(builder: (context)=>Homepage()));
     return Container(
       height: 56.0,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(23.0),
         gradient: LinearGradient(
-            colors: [
-              Color(0xFFFB415B),
-              Color(0xFFEE5623)
-            ],
-            begin: Alignment.centerRight,
-            end: Alignment.centerLeft,
+          colors: [
+            Color(0xFFFB415B),
+            Color(0xFFEE5623)
+          ],
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
         ),
       ),
       child: Center(
         child: Text(
-          "LOGIN",
+          "Click to Register",
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.0,
           ),
+
         ),
       ),
     );

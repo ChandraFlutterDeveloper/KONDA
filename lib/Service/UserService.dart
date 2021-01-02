@@ -8,18 +8,19 @@ class MovieService {
 static const BASE_URL = "konda.co.in/";
 
   Future<String> addMovie(MovieModel movieModel)async{
-final response =await http.post(BASE_URL ,body: movieModel.toJsonAdd());
-if (response.statusCode == 200){
-  return response.body;
-}else{
-  return "Error";
-}
+    final response =await http.post(BASE_URL ,body: movieModel.toJsonAdd());
+    if (response.statusCode == 200){
+      return response.body;
+    }else{
+      return "Error";
+    }
   }
 
   List<MovieModel> movieFromJson(String jsonString){
     final data = json.decode(jsonString);
     return List<MovieModel>.from(data.map((item)=>MovieModel.fromJson(item)));
   }
+
   Future<List<MovieModel>> getMovie()async{
     final response = await http.get(BASE_URL +"Movie_List");
     if (response.statusCode == 200) {
@@ -30,14 +31,14 @@ if (response.statusCode == 200){
     }
   }
 
-Future<String> DELETEMovie(MovieModel movieModel)async{
-  final response =await http.post(BASE_URL ,body: movieModel.toJsonAdd());
-  if (response.statusCode == 200){
-    return response.body;
-  }else{
-    return "Error";
+  Future<String> DeleteMovie(MovieModel movieModel)async{
+    final response =await http.post(BASE_URL ,body: movieModel.toJsonAdd());
+    if (response.statusCode == 200){
+      return response.body;
+    }else{
+      return "Error";
+    }
   }
-}
 
 }
 
