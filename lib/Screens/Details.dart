@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:konda/Home.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:konda_app/Screens/HomeScreen.dart';
 import 'dart:convert';
+
+import 'package:konda_app/Service/ApiService.dart';
 
 class Details extends StatefulWidget {
   @override
@@ -12,7 +14,7 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   Future<List> getData() async {
-    final response = await http.get("https://konda.co.in/Movie_List");
+    final response = await http.get(ApiService.BASE_URL+"Movie_List");
     return json.decode(response.body);
   }
 
@@ -157,7 +159,7 @@ class _DetailsState extends State<Details> {
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Homepage()));
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
               },
             ),
           )

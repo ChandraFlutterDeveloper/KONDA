@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:konda/Screens//welcome.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
-import 'package:intro_slider/scrollbar_behavior_enum.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'login_page.dart';
-import 'package:konda/Service/my_shared_preferance.dart';
+import 'package:konda_app/Screens/HomeScreen.dart';
+import 'package:konda_app/Service/my_shared_preferance.dart';
+import 'package:konda_app/constants.dart';
 
-//import 'package:intro_slider_example/home.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 
-Future<void> main() async {
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  var launch = preferences.getBool('launch');
-  runApp(MaterialApp(home: launch == null ? IntroScreen() : LoginPage()));
+void main() => runApp(new MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(DarkPrimaryColor);
+    return ThemeProvider(
+
+      initTheme: DarkTheme,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeProvider.of(context),
+            home: IntroScreen(),
+          );
+        },
+      ),
+    );
+  }
 }
-
 
 class IntroScreen extends StatefulWidget {
   IntroScreen({Key key}) : super(key: key);
@@ -31,74 +43,73 @@ class IntroScreenState extends State<IntroScreen> {
   List<Slide> slides = new List();
 
   Function goToTab;
-// This widget is the root of your application.
 
-  Future checkFirstTimeLaunch()async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool('launch', true);
+  bool isFirstTimeOpen = false;
+
+  IntroScreenState() {
+    MySharedPreferences.instance
+        .getBooleanValue("firstTimeOpen")
+        .then((value) => setState(() {
+      isFirstTimeOpen = value;
+    }));
   }
+
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
-    checkFirstTimeLaunch();
+
     slides.add(
       new Slide(
-        backgroundColor: Colors.black,
-        title: "Welcome to Konda Player ",
+        title: "Konda",
         styleTitle: TextStyle(
-            color: Colors.grey,
+            color: Color(0xFFFFFFFF),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            "",
+        "Konda Present New Indian Movies App",
         styleDescription: TextStyle(
-            color: Color(0xfffe9c8f),
+            color: Color(0x99FFFFFF),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "",
+        pathImage: "assets/images/konda.png",
       ),
     );
     slides.add(
       new Slide(
-        backgroundColor: Colors.black,
-        title: "Watch and Enjoys Movies, Series, And Many More...",
+        title: "TV",
         styleTitle: TextStyle(
-            color: Colors.amber,
+            color: Color(0xFFFFFFFF),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            "",
+        "Konda also present live Tv",
         styleDescription: TextStyle(
-            color: Color(0xfffe9c8f),
+            color: Color(0x99FFFFFF),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "",
+        pathImage: "assets/images/tv.png",
       ),
     );
     slides.add(
       new Slide(
-        backgroundColor: Colors.black,
-        title: "One Place for Different Entertainment",
+        title: "Web Series",
         styleTitle: TextStyle(
-            color: Color(0xff3da4ab),
+            color: Color(0xFFFFFFFF),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            '',
+        "Konda Presents Web Series",
         styleDescription: TextStyle(
-            color: Color(0xfffe9c8f),
+            color: Color(0x99FFFFFF),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "",
+        pathImage: "assets/images/movie1.png",
       ),
     );
   }
@@ -107,7 +118,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   void onTabChangeCompleted(index) {
@@ -117,7 +128,7 @@ class IntroScreenState extends State<IntroScreen> {
   Widget renderNextBtn() {
     return Icon(
       Icons.navigate_next,
-      color: Color(0xffffcc5c),
+      color: Color(0xFF4FC3F7),
       size: 35.0,
     );
   }
@@ -125,14 +136,14 @@ class IntroScreenState extends State<IntroScreen> {
   Widget renderDoneBtn() {
     return Icon(
       Icons.done,
-      color: Color(0xffffcc5c),
+      color: Color(0xFF4FC3F7),
     );
   }
 
   Widget renderSkipBtn() {
     return Icon(
       Icons.skip_next,
-      color: Color(0xffffcc5c),
+      color: Color(0xFF4FC3F7),
     );
   }
 
@@ -149,11 +160,11 @@ class IntroScreenState extends State<IntroScreen> {
             children: <Widget>[
               GestureDetector(
                   child: Image.asset(
-                currentSlide.pathImage,
-                width: 200.0,
-                height: 200.0,
-                fit: BoxFit.contain,
-              )),
+                    currentSlide.pathImage,
+                    width: 200.0,
+                    height: 200.0,
+                    fit: BoxFit.contain,
+                  )),
               Container(
                 child: Text(
                   currentSlide.title,
@@ -189,7 +200,7 @@ class IntroScreenState extends State<IntroScreen> {
       // Skip button
       renderSkipBtn: this.renderSkipBtn(),
       colorSkipBtn: Color(0x33ffcc5c),
-      highlightColorSkipBtn: Color(0xffffcc5c),
+      highlightColorSkipBtn: Color(0xFF4FC3F7),
 
       // Next button
       renderNextBtn: this.renderNextBtn(),
@@ -198,22 +209,19 @@ class IntroScreenState extends State<IntroScreen> {
       renderDoneBtn: this.renderDoneBtn(),
       onDonePress: this.onDonePress,
       colorDoneBtn: Color(0x33ffcc5c),
-      highlightColorDoneBtn: Color(0xffffcc5c),
+      highlightColorDoneBtn: Color(0xFF4FC3F7),
 
       // Dot indicator
-      colorDot: Color(0xffffcc5c),
+      colorDot: Color(0xFF4FC3F7),
       sizeDot: 13.0,
       typeDotAnimation: dotSliderAnimation.SIZE_TRANSITION,
 
       // Tabs
       listCustomTabs: this.renderListCustomTabs(),
-      backgroundColorAllSlides: Colors.white,
+      backgroundColorAllSlides: DarkPrimaryColor,
       refFuncGoToTab: (refFunc) {
         this.goToTab = refFunc;
       },
-
-      // Show or hide status bar
-      shouldHideStatusBar: true,
 
       // On tab change completed
       onTabChangeCompleted: this.onTabChangeCompleted,

@@ -17,15 +17,14 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
 
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: Icon(Icons.search, color: Colors.grey),
         title: TextField(
           decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search, color: Colors.grey),
             hintText: 'Search for movies, shows, genre, etc.',
             helperStyle: TextStyle(color: Colors.white),
             suffixIcon: IconButton(

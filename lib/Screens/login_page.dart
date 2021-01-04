@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:konda/Home.dart';
-import 'package:konda/Screens/registration.dart';
+import 'package:konda_app/Screens/HomeScreen.dart';
+import 'package:konda_app/Screens/registration.dart';
 
 void main() => runApp(App());
 
@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildButtonContainer() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     return Container(
       height: 56.0,
       width: MediaQuery.of(context).size.width,

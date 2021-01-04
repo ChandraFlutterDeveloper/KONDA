@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:http/http.dart'as http;
 import 'dart:convert';
 
-import 'package:konda/Screens/Details.dart';
+import 'package:konda_app/Screens/Details.dart';
+import 'package:konda_app/Service/ApiService.dart';
 
 void main() => runApp(MaterialApp());
 
@@ -22,8 +23,8 @@ class _MyListState extends State<MyList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar:AppBar(
-        backgroundColor: Colors.black,
         title: Text('My List', style: TextStyle(color: Colors.white),),
       ),
       // floatingActionButton: FloatingActionButton(
@@ -42,7 +43,9 @@ class _MyListState extends State<MyList> {
             return Items(list:ss.data);
           }
           else{
-            return CircularProgressIndicator();
+            return Center(
+              child: const CircularProgressIndicator(),
+            );
           }
         },
       ),
@@ -59,7 +62,7 @@ class Items extends StatelessWidget {
       itemCount: list==null?0:list.length,
       itemBuilder: (ctx,i){
         return ListTile(
-          leading: Icon(Icons.movie),
+          leading: Image.network(ApiService.BASE_URL+list[i]['v_poster']),
           title: Text(list[i]['v_title']),
           subtitle: Text(list[i]['year']),
           onTap: ()=> Navigator.of(context).push(

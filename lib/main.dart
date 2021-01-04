@@ -1,50 +1,49 @@
 import 'dart:async';
+
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/services.dart';
-import 'package:konda/Screens/HomeScreen.dart';
-import 'package:konda/Screens/Movies.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
-
-import 'Screens/introSlider.dart';
+import 'package:konda_app/Screens/introSlider.dart';
+import 'package:konda_app/constants.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
-
-
-    runApp(new MyApp());
-
+  runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    FlutterStatusbarcolor.setStatusBarColor(DarkPrimaryColor);
+    return ThemeProvider(
 
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      initTheme: DarkTheme,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeProvider.of(context),
+            home: SplashScreen(),
+          );
+        },
       ),
-      home: Movies(),
     );
   }
 }
 
-class Home extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
-
-class _HomeState extends State<Home>
-
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>{
 //----------------------------------------------------------------------------------------------//
   void handleTimeout() async {
 
-      Navigator.push( context,  MaterialPageRoute(builder: (context)=>IntroScreen()));
+    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>IntroScreen()));
 
   }
 //----------------------------------------------------------------------------------------------//
@@ -56,23 +55,41 @@ class _HomeState extends State<Home>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     startTimeout();
   }
 //----------------------------------------------------------------------------------------------//
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Image.asset("assets/logo.png", height: 100.0,),
+    ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
 
-          SizedBox(height: 30.0,),
+    return ThemeSwitchingArea(
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset("assets/images/logos.png", height: 100.0,),
 
-          SpinKitThreeBounce(color: Colors.orange),
-        ],
+                    SizedBox(height: 30.0,),
+
+                    SpinKitThreeBounce(color: Colors.lightBlueAccent),
+                  ],
+                ),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
 

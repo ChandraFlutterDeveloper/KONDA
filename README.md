@@ -1,4 +1,4 @@
-# konda
+# konda_app
 
 A new Flutter application.
 

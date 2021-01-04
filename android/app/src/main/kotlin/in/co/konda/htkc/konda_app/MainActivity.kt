@@ -1,4 +1,4 @@
-package `in`.co.konda.htkc.konda
+package `in`.co.konda.htkc.konda_app
 
 import io.flutter.embedding.android.FlutterActivity
 

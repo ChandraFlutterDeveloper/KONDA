@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:konda/Service/UserService.dart';
+import 'package:konda_app/Service/ApiService.dart';
 import 'dart:convert';
 import 'Details.dart';
 import 'login_page.dart';
@@ -13,15 +13,15 @@ class Movies extends StatefulWidget {
 
 class _MoviesState extends State<Movies> {
   Future<List> getData() async {
-    final response = await http.get("https://konda.co.in/Movie_List");
+    final response = await http.get(ApiService.BASE_URL+"Movie_List");
     return json.decode(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         title: Text(
           'Movies',
           style: TextStyle(color: Colors.white),
@@ -41,7 +41,9 @@ class _MoviesState extends State<Movies> {
           if (ss.hasData) {
             return Items(list: ss.data);
           } else {
-            return CircularProgressIndicator();
+            return Center(
+              child: const CircularProgressIndicator(),
+            );
           }
         },
       ),
@@ -58,8 +60,7 @@ class Items extends StatelessWidget {
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (ctx, i) {
           return ListTile(
-              leading: Icon(Icons.add),
-
+              leading: Image.network(ApiService.BASE_URL+list[i]['v_poster']),
               title: Text(list[i]['v_title']),
               subtitle: Text(list[i]['year']),
               onTap: () {
