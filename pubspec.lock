@@ -168,7 +168,15 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< Updated upstream
     version: "1.15.0-nullsafety.5"
+=======
+<<<<<<< HEAD
+    version: "1.15.0-nullsafety.3"
+=======
+    version: "1.15.0-nullsafety.5"
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+>>>>>>> Stashed changes
   color:
     dependency: transitive
     description:
@@ -198,7 +206,7 @@ packages:
     source: hosted
     version: "0.16.2"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
@@ -286,6 +294,21 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+  flutter_session:
+    dependency: "direct main"
+=======
+  flutter_spinkit:
+    dependency: "direct dev"
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+    description:
+      name: flutter_session
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
+>>>>>>> Stashed changes
   flutter_spinkit:
     dependency: "direct dev"
     description:
@@ -699,7 +722,15 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< Updated upstream
     version: "0.2.19-nullsafety.6"
+=======
+<<<<<<< HEAD
+    version: "0.2.19-nullsafety.2"
+=======
+    version: "0.2.19-nullsafety.6"
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+>>>>>>> Stashed changes
   time:
     dependency: transitive
     description:

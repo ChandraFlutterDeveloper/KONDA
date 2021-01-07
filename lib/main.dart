@@ -3,7 +3,14 @@ import 'dart:async';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+<<<<<<< Updated upstream
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+=======
+<<<<<<< HEAD
+=======
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:konda_app/Screens/introSlider.dart';

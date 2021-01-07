@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
+<<<<<<< Updated upstream
 import 'package:konda_app/Screens/registration.dart';
+=======
+<<<<<<< HEAD
+=======
+import 'package:konda_app/Screens/registration.dart';
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+>>>>>>> Stashed changes
 
 void main() => runApp(App());
 
@@ -55,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).primaryColor),
+
             ),
             SizedBox(
               height: 40.0,
@@ -136,6 +144,27 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildButtonContainer() {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    return GestureDetector(
+      onTap: (){
+
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      },
+      child: Container(
+        //onTap:()=> Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        height: 56.0,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(23.0),
+          gradient: LinearGradient(
+            colors: [Color(0xFFFB415B), Color(0xFFEE5623)],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+=======
+>>>>>>> Stashed changes
     Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     return Container(
       height: 56.0,
@@ -146,14 +175,15 @@ class _LoginPageState extends State<LoginPage> {
           colors: [Color(0xFFFB415B), Color(0xFFEE5623)],
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
         ),
-      ),
-      child: Center(
-        child: Text(
-          "LOGIN",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
+        child: Center(
+          child: Text(
+            "LOGIN",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ),
           ),
         ),
       ),

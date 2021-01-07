@@ -4,9 +4,47 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'dart:convert';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:konda_app/constants.dart';
+import 'package:konda_app/Widgets/Video.dart';
 
+<<<<<<< Updated upstream
 import 'package:konda_app/Service/ApiService.dart';
 
+=======
+<<<<<<< HEAD
+
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:konda_app/Service/ApiService.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(DarkPrimaryColor);
+    return ThemeProvider(
+      initTheme: DarkTheme,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeProvider.of(context),
+            home: Details(),
+          );
+        },
+      ),
+    );
+  }
+}
+=======
+import 'package:konda_app/Service/ApiService.dart';
+
+>>>>>>> 7e979592e841631abd127984d3b039e98fd17967
+>>>>>>> Stashed changes
 class Details extends StatefulWidget {
   @override
   _DetailsState createState() => _DetailsState();
@@ -21,7 +59,7 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+
         body: CustomScrollView(slivers: <Widget>[
           SliverAppBar(
             flexibleSpace: FlexibleSpaceBar(
@@ -31,7 +69,7 @@ class _DetailsState extends State<Details> {
                     SizedBox(
                       height: 250,
                       width: 150,
-                      child: Image.network('assets/images/img5.jpg'),
+                      child: Image.network('https://konda.co.in/userAssets/img/covers/cover.jpg'),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,7 +97,7 @@ class _DetailsState extends State<Details> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(right:25,left:25,top: 8.0),
                       child: Container(
                         height: 35,
                         width: 400,
@@ -67,7 +105,9 @@ class _DetailsState extends State<Details> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15)),
                         child: FlatButton.icon(
-                            onPressed: null,
+                            onPressed: ()=>
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => Videoplayer())),
                             icon: Icon(Icons.play_arrow_outlined,
                                 size: 30, color: Colors.black),
                             label: Text('Play',
@@ -148,13 +188,15 @@ class _DetailsState extends State<Details> {
                 ),
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/images/img5.jpg'),
+
+                        image: NetworkImage('https://konda.co.in/userAssets/img/covers/cover2.jpg',),
                         fit: BoxFit.cover,
+
                         colorFilter: ColorFilter.mode(
                             Colors.black54, BlendMode.darken))),
               ),
             ),
-            expandedHeight: 590,
+            expandedHeight: 790,
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
