@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 void main() => runApp(App());
 
 class App extends StatelessWidget{
@@ -22,8 +24,43 @@ class Register extends StatefulWidget{
   _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register>{
+class _RegisterState extends State<Register> {
 
+  TextEditingController u_name = TextEditingController();
+  TextEditingController u_pass = TextEditingController();
+
+  Future register() async {
+    var url = "https://konda.co.in/User_Signin";
+    var response = await http.post(url, body: {
+    /*  "mobile" = u_name.text,
+      "u_pass" = u_pass.text,*/
+    });
+    var data = json.decode(response.body);
+    if (data == Error) {
+      Fluttertoast.showToast(
+          msg: "This user already exit!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
+    else{
+      Fluttertoast.showToast(
+          msg: "Registration successful!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      }
+
+
+}
   bool _isHidden = true;
 
   void _toggleVisibility(){
@@ -52,7 +89,7 @@ class _RegisterState extends State<Register>{
               ),
             ),
             SizedBox(height: 40.0,),
-            buildTextField("Enter Your Name,"),
+            buildTextField("Enter Your Name,",),
             SizedBox(height: 20.0,),
             buildTextField("Enter Email"),
             SizedBox(height: 20.0,),
@@ -107,30 +144,35 @@ class _RegisterState extends State<Register>{
   }
 
   Widget buildButtonContainer(){
-    Navigator.push(
-        context,  MaterialPageRoute(builder: (context)=>HomeScreen()));
-    return Container(
-      height: 56.0,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(23.0),
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFFFB415B),
-            Color(0xFFEE5623)
-          ],
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-        ),
-      ),
-      child: Center(
-        child: Text(
-          "Click to Register",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-          ),
 
+    return GestureDetector(
+      onTap: (){
+        register();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      },
+      child: Container(
+        height: 56.0,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(23.0),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFFB415B),
+              Color(0xFFEE5623)
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "Click to Register",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ),
+
+          ),
         ),
       ),
     );

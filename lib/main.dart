@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/introSlider.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>{
 //----------------------------------------------------------------------------------------------//
   void handleTimeout() async {
 
-    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>IntroScreen()));
+    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>HomeScreen()));
 
   }
 //----------------------------------------------------------------------------------------------//

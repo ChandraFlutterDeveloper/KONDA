@@ -3,6 +3,9 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:konda_app/Screens/Movies.dart';
+import 'package:konda_app/Screens/MyList.dart';
+import 'package:konda_app/Screens/Search.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:konda_app/widgets/profile_list_item.dart';
@@ -240,64 +243,71 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: new BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            selectedFontSize: 14,
-            unselectedFontSize: 12,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                    size: 22,
-                  ),
-                  // ignore: deprecated_member_use
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Home',
-                      style: TextStyle(fontSize: 12),
+          bottomNavigationBar: BottomAppBar(
+            child: Row(
+              children: [
+
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      size: 27,
+                      color: Colors.amber,
                     ),
-                  )),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.search,
-                    size: 22,
+                    onPressed: null,
                   ),
-                  // ignore: deprecated_member_use
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Search',
-                      style: TextStyle(fontSize: 12),
+                ),
+                // ignore: deprecated_member_use
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+
+                    icon: Icon(
+                      Icons.search,
+                      size: 27,
                     ),
-                  )),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.movie,
-                    size: 22,
+                    onPressed: () {
+                      {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Search()));
+                      }
+                    },
                   ),
-                  // ignore: deprecated_member_use
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Movies',
-                      style: TextStyle(fontSize: 12),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.movie_sharp,
+                      size: 27,
+
                     ),
-                  )),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.add,
-                    size: 22,
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Movies()));
+                    },
                   ),
-                  // ignore: deprecated_member_use
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Play List',
-                      style: TextStyle(fontSize: 12),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.playlist_add,
+                      size: 27,
+
                     ),
-                  )),
-            ],
+                    onPressed: () {
+                      {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyList()));
+                      }
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
           body: CustomScrollView(
             slivers: <Widget>[
@@ -315,7 +325,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0, right: 130.0, left: 10.0),
+                        padding: const EdgeInsets.only(
+                            top: 20.0, right: 130.0, left: 10.0),
                         child: Text('Come enjoy with us..',
                             style: TextStyle(
                                 color: Colors.white,
@@ -427,18 +438,16 @@ class Items extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Card(
             child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () {
-
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => Details()));
-              },
-              child: Container(
-                width: 100,
-                child: Column(
-                  children: [
-                    Image.network(ApiService.BASE_URL + list[i]['v_poster'],height: 124.0, width: 100.0,fit: BoxFit.cover),
-
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => Details()));
+                },
+                child: Container(
+                  width: 100,
+                  child: Column(children: [
+                    Image.network(ApiService.BASE_URL + list[i]['v_poster'],
+                        height: 124.0, width: 100.0, fit: BoxFit.cover),
                     LinearProgressIndicator(value: 50.0),
                     Row(
                       children: <Widget>[
@@ -458,10 +467,8 @@ class Items extends StatelessWidget {
                             )),
                       ],
                     )
-                  ]
-                ),
-            )
-            ),
+                  ]),
+                )),
           ),
         );
       },

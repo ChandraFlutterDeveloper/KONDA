@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:konda_app/Service/ApiService.dart';
 import 'dart:convert';
 import 'Details.dart';
-import 'login_page.dart';
+
 
 class Movies extends StatefulWidget {
   @override

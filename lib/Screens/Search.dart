@@ -37,12 +37,15 @@ class _SearchState extends State<Search> {
       body: Container(
         child: Column(
           children: <Widget>[
-            Text(
-              'Popular Searches',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Popular Searches',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               height: 400,

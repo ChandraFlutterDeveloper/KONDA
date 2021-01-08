@@ -20,6 +20,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  TextEditingController u_name = TextEditingController();
+  TextEditingController u_pass = TextEditingController();
+
+
   bool _isHidden = true;
 
   void _toggleVisibility() {

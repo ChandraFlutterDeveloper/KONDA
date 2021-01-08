@@ -55,65 +55,36 @@ class ProfileScreen extends StatelessWidget {
                         child: new Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
-                                child: new Text(
-                                  'Camila Cabello',
-                                  style: new TextStyle(
-                                      fontSize: 20.0,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              new SizedBox(
-                                height: 10.0,
-                              ),
+
+
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 5, right: 8.0, left: 8.0),
-                                child: new Row(
+                                    top: 35, right: 8.0, left: 8.0),
+                                child: new Column(
                                   children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: new Column(children: <Widget>[
-                                        new Text('1208',
-                                            style: new TextStyle(
-                                                fontSize: 15.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold)),
-                                        new Text('Followers',
-                                            style: new TextStyle(
-                                                fontSize: 12.0, color: Colors.black)),
-                                      ]),
+                                      padding: const EdgeInsets.only(bottom:8.0),
+                                      child: new Text('Konda',
+                                          style: new TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold)),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: new Column(
-                                        children: <Widget>[
-                                          new Text(
-                                            '380',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          new Text(
-                                            'Following',
-                                            style: TextStyle(
-                                                fontSize: 12, color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
+                                      padding: const EdgeInsets.only(left:8,bottom:8.0),
+                                      child: new Text('91XXXXXXXX',
+                                          style: new TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold)),
                                     ),
+
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
-                                child: new Text('Level 1'),
-                              ),
+
                               LinearProgressIndicator(
-                                value: .4,
+                                value: 1,
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                               ),
                             ]))
@@ -134,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
 
                           ListTile(
                             leading: Icon(Icons.speaker_notes_sharp,color: Colors.redAccent,),
-                            title: Text('Ability Test',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                            title: Text('My Play List',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
@@ -142,13 +113,7 @@ class ProfileScreen extends StatelessWidget {
 
                           ListTile(
                             leading: Icon(Icons.event_note_outlined,color: Colors.blueGrey,),
-                            title: Text('My Topics',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                            trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.download_outlined,color: Colors.cyan,),
-                            title: Text('Downloads Management',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('Movies',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
@@ -158,7 +123,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           ListTile(
                             leading: Icon(Icons.book,color: Colors.grey,),
-                            title: Text('Coupons',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('Update Profile',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
