@@ -8,11 +8,6 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:konda_app/constants.dart';
 import 'package:konda_app/Widgets/Video.dart';
 
-<<<<<<< Updated upstream
-import 'package:konda_app/Service/ApiService.dart';
-
-=======
-<<<<<<< HEAD
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:konda_app/Service/ApiService.dart';
@@ -40,11 +35,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-=======
-import 'package:konda_app/Service/ApiService.dart';
-
->>>>>>> 7e979592e841631abd127984d3b039e98fd17967
->>>>>>> Stashed changes
 class Details extends StatefulWidget {
   @override
   _DetailsState createState() => _DetailsState();

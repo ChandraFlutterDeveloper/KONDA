@@ -4,13 +4,7 @@ import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
 import 'package:konda_app/Screens/login_page.dart';
-=======
->>>>>>> 7e979592e841631abd127984d3b039e98fd17967
->>>>>>> Stashed changes
 import 'package:konda_app/Service/my_shared_preferance.dart';
 import 'package:konda_app/constants.dart';
 
@@ -80,15 +74,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-<<<<<<< Updated upstream
-        pathImage: "assets/images/konda.png",
-=======
-<<<<<<< HEAD
         pathImage: "assets/icons/konda.png",
-=======
-        pathImage: "assets/images/konda.png",
->>>>>>> 7e979592e841631abd127984d3b039e98fd17967
->>>>>>> Stashed changes
       ),
     );
     slides.add(
@@ -133,7 +119,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   void onTabChangeCompleted(index) {

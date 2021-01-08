@@ -20,7 +20,7 @@ class ProfileListItem extends StatelessWidget {
     return Container(
       height: SpacingUnit.w * 5.5,
       margin: EdgeInsets.symmetric(
-        horizontal: SpacingUnit.w * 4,
+        horizontal: SpacingUnit.w * 1,
       ).copyWith(
         bottom: SpacingUnit.w * 2,
       ),

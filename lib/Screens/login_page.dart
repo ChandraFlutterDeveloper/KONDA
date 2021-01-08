@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
-<<<<<<< Updated upstream
-import 'package:konda_app/Screens/registration.dart';
-=======
-<<<<<<< HEAD
-=======
-import 'package:konda_app/Screens/registration.dart';
->>>>>>> 7e979592e841631abd127984d3b039e98fd17967
->>>>>>> Stashed changes
 
 void main() => runApp(App());
 
@@ -144,9 +136,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildButtonContainer() {
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
     return GestureDetector(
       onTap: (){
 
@@ -163,19 +152,6 @@ class _LoginPageState extends State<LoginPage> {
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
           ),
-=======
->>>>>>> Stashed changes
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    return Container(
-      height: 56.0,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(23.0),
-        gradient: LinearGradient(
-          colors: [Color(0xFFFB415B), Color(0xFFEE5623)],
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
->>>>>>> 7e979592e841631abd127984d3b039e98fd17967
         ),
         child: Center(
           child: Text(
