@@ -3,6 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const SpacingUnit = 10;
 
+//colors used in this app
+const Color white = Colors.white;
+const Color black = Colors.black;
+const Color yellow = Color(0xFFFFD54F);
+
+//default app padding
+const double appPadding = 20.0;
 const DarkPrimaryColor = Color(0xFF212121);
 const DarkSecondaryColor = Color(0xFF373737);
 const LightPrimaryColor = Color(0xFFFFFFFF);
