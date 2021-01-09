@@ -6,17 +6,17 @@ import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/Screens/Search.dart';
+import 'package:konda_app/constants.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:konda_app/widgets/profile_list_item.dart';
 import 'package:konda_app/Service/ApiService.dart';
-import 'package:konda_app/constants.dart';
 import 'package:konda_app/Screens/Details.dart';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'Profile.dart';
+import 'package:konda_app/Screens/Profile.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,10 +48,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List> getData() async {
+  Future<List> getMovie() async {
     final response = await http.get(ApiService.BASE_URL + "Movie_List");
     return json.decode(response.body);
   }
+  Future<List> popularMovie() async {
+    final response = await http.get(ApiService.BASE_URL + "Popular_Movie_List");
+    return json.decode(response.body);
+  }
+  Future<List> getSlider() async {
+    final response = await http.get(ApiService.BASE_URL + "Slider_List");
+    return json.decode(response.body);
+  }
+
+
 
   Future<bool> _onBackPressed() {
     return showDialog(
@@ -115,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CircleAvatar(
                   radius: SpacingUnit.w * 5,
                   backgroundImage: NetworkImage(
-                      'https://cdn.planetradio.co.uk/one/media/5d9b/54cd/a441/05b6/b293/1079/camila-cabello-facts.jpg?quality=80&format=jpg&width=960&ratio=16-9'),
+                      'https://hemantchandra.com/assets/img/profile-img.jpg'),
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
@@ -142,12 +152,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: SpacingUnit.w * 2),
           Text(
-            'Nicolas Adams',
+            'Konda User',
             style: TitleTextStyle,
           ),
           SizedBox(height: SpacingUnit.w * 0.5),
           Text(
-            'nicolasadams@gmail.com',
+            'konda@gmail.com',
             style: CaptionTextStyle,
           ),
           SizedBox(height: SpacingUnit.w * 2),
@@ -244,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           bottomNavigationBar: BottomAppBar(
+            color: Color(0xFF212121),
             child: Row(
               children: [
 
@@ -339,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           margin: EdgeInsets.symmetric(vertical: 20.0),
                           height: 200,
                           child: FutureBuilder<List>(
-                            future: getData(),
+                            future: getMovie(),
 
                             // ignore: missing_return
                             builder: (ctx, ss) {
@@ -380,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           margin: EdgeInsets.symmetric(vertical: 20.0),
                           height: 200,
                           child: FutureBuilder<List>(
-                            future: getData(),
+                            future: popularMovie(),
 
                             // ignore: missing_return
                             builder: (ctx, ss) {
@@ -412,8 +423,8 @@ class _HomeScreenState extends State<HomeScreen> {
       autoplay: true,
       itemBuilder: (BuildContext context, int index) {
         return new Image.network(
-          "https://lh3.googleusercontent.com/wIcl3tehFmOUpq-Jl3hlVbZVFrLHePRtIDWV5lZwBVDr7kEAgLTChyvXUclMVQDRHDEcDhY=w640-h400-e365-rj-sc0x00ffffff",
-          fit: BoxFit.fitHeight,
+          "https://konda.co.in/userAssets/img/covers/cover3.jpg",
+            height: 124.0, width: 100.0, fit: BoxFit.cover,
         );
       },
       itemCount: 10,

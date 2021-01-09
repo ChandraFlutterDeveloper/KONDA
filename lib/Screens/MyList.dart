@@ -16,7 +16,7 @@ class MyList extends StatefulWidget {
 class _MyListState extends State<MyList> {
 
   Future<List>getData()async{
-    final response= await http.get("https://konda.co.in/Movie_List");
+    final response= await http.get(ApiService.BASE_URL+"My_List");
     return json.decode(response.body);
   }
 

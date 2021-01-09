@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:konda_app/Screens/registration.dart';
+import 'package:konda_app/constants.dart';
 
-void main() => runApp(App());
+void main() {
+  runApp(MyApp());
+}
 
-class App extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Color(0xFFFB415B), fontFamily: "Ubuntu"),
-      home: LoginPage(),
+    return ThemeProvider(
+      initTheme: DarkTheme,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeProvider.of(context),
+            home: LoginPage(),
+          );
+        },
+      ),
     );
   }
 }
@@ -43,28 +56,20 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+
+            Image.asset("assets/icons/konda.png",height: 150,),
+
             Text(
-              'Konda',
-              style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Pacifico"),
-            ),
-            SizedBox(
-              height: 40.0,
-            ),
-            Text(
-              "LOGIN",
+              "SIGN IN",
               style: TextStyle(
                   fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor),
+                  fontWeight: FontWeight.bold),
 
             ),
             SizedBox(
               height: 40.0,
             ),
-            buildTextField("Enter Your Mobile No.,"),
+            buildTextField("Enter Your Mobile No."),
             SizedBox(
               height: 20.0,
             ),
@@ -77,15 +82,15 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Resend_OTP",
+                    "Resend OTP",
                     style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.blue,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 50.0),
+            SizedBox(height: 20.0),
             buildButtonContainer(),
             SizedBox(
               height: 10.0,
@@ -96,13 +101,22 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Don't have an account?"),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Text("SIGN UP",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ))
+
+                     FlatButton(
+                     child: Row(
+                       children: [
+                         Text("SIGN UP",
+                           style: TextStyle(
+                             color: Colors.blue,
+                           ))],
+
+                     ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => Register()));
+                      }             ,
+
+                    )
                   ],
                 ),
               ),
@@ -124,10 +138,10 @@ class _LoginPageState extends State<LoginPage> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        prefixIcon: hintText == "Mobile"
-            ? Icon(Icons.messenger_outline)
-            : Icon(Icons.phone_android_outlined),
-        suffixIcon: hintText == "OTP"
+        prefixIcon: hintText == "Enter Your Mobile No."
+            ? Icon(Icons.phone_android_outlined)
+            : Icon(Icons.messenger_outline),
+        suffixIcon: hintText == "Enter OTP"
             ? IconButton(
                 onPressed: _toggleVisibility,
                 icon: _isHidden
@@ -136,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
               )
             : null,
       ),
-      obscureText: hintText == "OTP" ? _isHidden : false,
+      obscureText: hintText == "Enter OTP" ? _isHidden : false,
     );
   }
 
@@ -160,9 +174,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: Center(
           child: Text(
-            "LOGIN",
+            "GENERATE OTP",
             style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:konda_app/Screens/login_page.dart';
 import 'package:konda_app/constants.dart';
 
 
@@ -39,17 +40,18 @@ class ProfileScreen extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
             body: Column(
 
               children: [
                 Container(
                   child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                     Padding(
-                        padding: EdgeInsets.only(top: 30, left: 10.0, right: 10.0),
+                        padding: EdgeInsets.only(top: 80, left: 10.0, right: 10.0),
                         child: CircleAvatar(
                           radius: 50.0,
                           backgroundImage: NetworkImage(
-                              'https://cdn.planetradio.co.uk/one/media/5d9b/54cd/a441/05b6/b293/1079/camila-cabello-facts.jpg?quality=80&format=jpg&width=960&ratio=16-9'),
+                              'https://hemantchandra.com/assets/img/profile-img.jpg'),
                         )),
                     Expanded(
                         child: new Column(
@@ -59,12 +61,12 @@ class ProfileScreen extends StatelessWidget {
 
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 35, right: 8.0, left: 8.0),
+                                    top: 100, right: 8.0, left: 8.0),
                                 child: new Column(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(bottom:8.0),
-                                      child: new Text('Konda',
+                                      child: new Text('Konda User',
                                           style: new TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.white,
@@ -84,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
 
                               LinearProgressIndicator(
-                                value: 1,
+                                value: 0.95,
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                               ),
                             ]))
@@ -93,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
 
                 Container(
                     child:Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.only(top: 25.0, left: 15.0, right: 15.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           ListTile(
@@ -125,7 +127,9 @@ class ProfileScreen extends StatelessWidget {
                             leading: Icon(Icons.book,color: Colors.grey,),
                             title: Text('Update Profile',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                            onTap: (){},
+                            onTap: (){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                            },
                           ),
 
                           ListTile(
@@ -135,12 +139,12 @@ class ProfileScreen extends StatelessWidget {
                             onTap: (){},
                           ),
 
-                          ListTile(
+                       /*   ListTile(
                             leading: Icon(Icons.person_add_alt,color: Colors.amber,),
                             title: Text('Give the gift of daily yoga',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
-                          ),
+                          ),*/
                         ],
                       ),
                     )

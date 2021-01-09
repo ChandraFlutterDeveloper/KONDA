@@ -64,10 +64,10 @@ class _DetailsState extends State<Details> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text('about show',
+                        Text('I Dream...',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15)),
-                        Text('year',
+                        Text('2020',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15)),
                         Container(
@@ -77,11 +77,11 @@ class _DetailsState extends State<Details> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text('age',
+                              child: Text('1 Year',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15)),
                             )),
-                        Text('season',
+                        Text('Winter',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15)),
                       ],
@@ -107,10 +107,10 @@ class _DetailsState extends State<Details> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+                          const EdgeInsets.only(top: 20, left: 30, right: 20, bottom: 20),
                       child: Container(
                           height: 50,
-                          child: Text('Info of movie',
+                          child: Text('It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy.',
                               style: TextStyle(color: Colors.white))),
                     ),
                     Padding(

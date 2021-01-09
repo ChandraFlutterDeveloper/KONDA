@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/introSlider.dart';
+import 'package:konda_app/Screens/login_page.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -43,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>{
 //----------------------------------------------------------------------------------------------//
   void handleTimeout() async {
 
-    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>HomeScreen()));
+    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>IntroScreen()));
 
   }
 //----------------------------------------------------------------------------------------------//
@@ -82,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen>{
 
                     SizedBox(height: 30.0,),
 
-                    SpinKitThreeBounce(color: Colors.lightBlueAccent),
+                    SpinKitThreeBounce(color: Colors.blue),
                   ],
                 ),
                 )

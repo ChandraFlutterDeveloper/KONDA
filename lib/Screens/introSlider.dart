@@ -119,7 +119,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   void onTabChangeCompleted(index) {
@@ -129,7 +129,7 @@ class IntroScreenState extends State<IntroScreen> {
   Widget renderNextBtn() {
     return Icon(
       Icons.navigate_next,
-      color: Color(0xFF4FC3F7),
+      color: Colors.blue,
       size: 35.0,
     );
   }
@@ -137,14 +137,14 @@ class IntroScreenState extends State<IntroScreen> {
   Widget renderDoneBtn() {
     return Icon(
       Icons.done,
-      color: Color(0xFF4FC3F7),
+      color: Colors.blue,
     );
   }
 
   Widget renderSkipBtn() {
     return Icon(
       Icons.skip_next,
-      color: Color(0xFF4FC3F7),
+      color: Colors.blue,
     );
   }
 
@@ -200,8 +200,8 @@ class IntroScreenState extends State<IntroScreen> {
 
       // Skip button
       renderSkipBtn: this.renderSkipBtn(),
-      colorSkipBtn: Color(0x33ffcc5c),
-      highlightColorSkipBtn: Color(0xFF4FC3F7),
+      colorSkipBtn: Colors.black,
+      highlightColorSkipBtn: Colors.blue,
 
       // Next button
       renderNextBtn: this.renderNextBtn(),
@@ -209,11 +209,11 @@ class IntroScreenState extends State<IntroScreen> {
       // Done button
       renderDoneBtn: this.renderDoneBtn(),
       onDonePress: this.onDonePress,
-      colorDoneBtn: Color(0x33ffcc5c),
-      highlightColorDoneBtn: Color(0xFF4FC3F7),
+      colorDoneBtn: Colors.black,
+      highlightColorDoneBtn: Colors.blue,
 
       // Dot indicator
-      colorDot: Color(0xFF4FC3F7),
+      colorDot: Colors.blue,
       sizeDot: 13.0,
       typeDotAnimation: dotSliderAnimation.SIZE_TRANSITION,
 

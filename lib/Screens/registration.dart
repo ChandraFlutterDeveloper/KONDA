@@ -3,6 +3,8 @@ import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
+
+import 'package:konda_app/Screens/login_page.dart';
 void main() => runApp(App());
 
 class App extends StatelessWidget{
@@ -79,21 +81,20 @@ class _RegisterState extends State<Register> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
 
-            SizedBox(height: 40.0,),
+            Image.asset("assets/icons/konda.png",height: 150,),
+
             Text(
-              "Register Yourself",
+              "SIGN UP",
               style: TextStyle(
                   fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor
-              ),
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 40.0,),
-            buildTextField("Enter Your Name,",),
+            buildTextField("Enter Your Name",),
             SizedBox(height: 20.0,),
             buildTextField("Enter Email"),
             SizedBox(height: 20.0,),
-            buildTextField("Enter Mobile No"),
+            buildTextField("Enter Mobile No."),
             SizedBox(height: 20.0,),
             Container(
               child: Row(
@@ -101,7 +102,7 @@ class _RegisterState extends State<Register> {
                 children: <Widget>[],
               ),
             ),
-            SizedBox(height: 50.0),
+            SizedBox(height: 20.0),
             buildButtonContainer(),
             SizedBox(height: 10.0,),
             Container(
@@ -110,8 +111,21 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Have an account?"),
-                    SizedBox(width: 10.0,),
-                    Text("Sign In", style: TextStyle(color: Theme.of(context).primaryColor,))
+                    FlatButton(
+                      child: Row(
+                        children: [
+                          Text("SIGN IN",
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ))],
+
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => LoginPage()));
+                      }             ,
+
+                    )
                   ],
                 ),
               ),
@@ -133,13 +147,13 @@ class _RegisterState extends State<Register> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        prefixIcon: hintText == "Mobile" ? Icon(Icons.messenger_outline) : Icon(Icons.phone_android_outlined),
-        suffixIcon: hintText == "OTP" ? IconButton(
+        prefixIcon: hintText == "Enter Your Name" ? Icon(Icons.person) :  (hintText == "Enter Email"? Icon(Icons.email_outlined):Icon(Icons.phone_android_outlined)),
+        suffixIcon: hintText == "Password" ? IconButton(
           onPressed: _toggleVisibility,
           icon: _isHidden ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
         ) : null,
       ),
-      obscureText: hintText == "OTP" ? _isHidden : false,
+      obscureText: hintText == "Password" ? _isHidden : false,
     );
   }
 
@@ -166,9 +180,10 @@ class _RegisterState extends State<Register> {
         ),
         child: Center(
           child: Text(
-            "Click to Register",
+            "SIGN UP",
             style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
 
