@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/Intro.dart';
+import 'package:konda_app/Screens/introSlider.dart';
+import 'package:konda_app/Screens/login_page.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -19,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(DarkPrimaryColor);
     return ThemeProvider(
+
       initTheme: DarkTheme,
       child: Builder(
         builder: (context) {
@@ -37,20 +41,18 @@ class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
-
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>{
 //----------------------------------------------------------------------------------------------//
   void handleTimeout() async {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => OnboardingScreenOne()));
-  }
 
+    Navigator.pushReplacement( context,  MaterialPageRoute(builder: (context)=>OnboardingScreenOne()));
+
+  }
 //----------------------------------------------------------------------------------------------//
   startTimeout() async {
     var duration = const Duration(seconds: 3);
     return new Timer(duration, handleTimeout);
   }
-
 //----------------------------------------------------------------------------------------------//
   @override
   void initState() {
@@ -75,19 +77,16 @@ class _SplashScreenState extends State<SplashScreen> {
               children: <Widget>[
                 Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                        "assets/images/logos.png",
-                        height: 100.0,
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      SpinKitThreeBounce(color: Colors.blue),
-                    ],
-                  ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset("assets/images/logos.png", height: 100.0,),
+
+                    SizedBox(height: 30.0,),
+
+                    SpinKitThreeBounce(color: Colors.blue),
+                  ],
+                ),
                 )
               ],
             ),
@@ -95,5 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
         },
       ),
     );
+
   }
+
 }

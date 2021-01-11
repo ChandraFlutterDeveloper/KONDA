@@ -5,7 +5,7 @@ import 'dart:convert';
 
 import 'package:konda_app/Model/MovieModel.dart';
 import 'package:konda_app/Service/ApiService.dart';
-import 'package:konda_app/widgets/GridView.dart';
+import 'package:konda_app/Widgets/GridView.dart';
 
 class More extends StatefulWidget {
   @override

@@ -21,16 +21,6 @@ class _MoviesState extends State<Movies> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          'Movies',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Icon(Icons.add),
-      // ),
       body: FutureBuilder<List>(
         future: getData(),
         // ignore: missing_return

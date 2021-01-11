@@ -37,17 +37,22 @@ class ProfileScreen extends StatelessWidget {
 
 
     return ThemeSwitchingArea(
+
       child: Builder(
         builder: (context) {
           return Scaffold(
             backgroundColor: Theme.of(context).backgroundColor,
+            appBar:AppBar(
+              title: Text('Profile', style: TextStyle(color: Colors.white),),
+            ),
+
             body: Column(
 
               children: [
                 Container(
                   child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                     Padding(
-                        padding: EdgeInsets.only(top: 80, left: 10.0, right: 10.0),
+                        padding: EdgeInsets.only(top: 20, left: 10.0, right: 10.0),
                         child: CircleAvatar(
                           radius: 50.0,
                           backgroundImage: NetworkImage(
@@ -61,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
 
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 100, right: 8.0, left: 8.0),
+                                    top: 40, right: 8.0, left: 8.0),
                                 child: new Column(
                                   children: <Widget>[
                                     Padding(
@@ -100,14 +105,14 @@ class ProfileScreen extends StatelessWidget {
                         children: <Widget>[
                           ListTile(
                             leading: Icon(Icons.person_add_alt,color: Colors.orangeAccent,),
-                            title: Text('Invite Friends',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                            title: Text('Invite Friends',style: TextStyle(fontSize: 20),),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
 
                           ListTile(
                             leading: Icon(Icons.speaker_notes_sharp,color: Colors.redAccent,),
-                            title: Text('My Play List',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                            title: Text('My Play List',style: TextStyle(fontSize: 20),),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
@@ -115,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
 
                           ListTile(
                             leading: Icon(Icons.event_note_outlined,color: Colors.blueGrey,),
-                            title: Text('Movies',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('Movies',style: TextStyle(fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
@@ -125,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           ListTile(
                             leading: Icon(Icons.book,color: Colors.grey,),
-                            title: Text('Update Profile',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('Update Profile',style: TextStyle(fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
@@ -134,14 +139,14 @@ class ProfileScreen extends StatelessWidget {
 
                           ListTile(
                             leading: Icon(Icons.contact_support,color: Colors.pink,),
-                            title: Text('FAQ & Feedback',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('FAQ & Feedback',style: TextStyle(fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),
 
                        /*   ListTile(
                             leading: Icon(Icons.person_add_alt,color: Colors.amber,),
-                            title: Text('Give the gift of daily yoga',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                            title: Text('Give the gift of daily yoga',style: TextStyle(fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                             onTap: (){},
                           ),*/

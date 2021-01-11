@@ -5,6 +5,7 @@ import 'package:konda_app/Screens/Details.dart';
 import 'dart:convert';
 
 import 'package:konda_app/Service/ApiService.dart';
+import 'package:konda_app/constants.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -20,22 +21,13 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
 
+      backgroundColor: DarkSecondaryColor,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search, color: Colors.grey),
-            hintText: 'Search for movies, shows, genre, etc.',
-            helperStyle: TextStyle(color: Colors.white),
-            suffixIcon: IconButton(
-              onPressed: null,
-              icon: Icon(Icons.mic, color: Colors.grey),
-            ),
-          ),
-        ),
+        backgroundColor: Colors.transparent,
+        title: buildTextField('Search for movies, shows, genre, etc.'),
       ),
       body: FutureBuilder<List>(
               future: getData(),
@@ -56,6 +48,25 @@ class _SearchState extends State<Search> {
             ),
     );
   }
+}
+
+Widget buildTextField(String hintText) {
+  return TextField(
+    decoration: InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(
+        color: Colors.grey,
+        fontSize: 16.0,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      prefixIcon: hintText == 'Search for movies, shows, genre, etc.'
+          ? Icon(Icons.search)
+          : Icon(Icons.youtube_searched_for_rounded),
+
+    ),
+  );
 }
 
 class Items extends StatelessWidget {
