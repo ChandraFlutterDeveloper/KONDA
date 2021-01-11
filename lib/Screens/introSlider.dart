@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
@@ -230,4 +229,3 @@ class IntroScreenState extends State<IntroScreen> {
     );
   }
 }
-*/

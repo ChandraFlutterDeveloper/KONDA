@@ -1,4 +1,3 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -110,12 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     return loginBtn;
   }
-
-  int currentIndex = 0;
-  String selectedIndex = 'TAB: 0';
-
-  String email = "", name = "", id = "";
-  TabController tabController;
 
   @override
   Widget build(BuildContext context) {
@@ -260,34 +253,72 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: BottomNavyBar(
+          bottomNavigationBar: BottomAppBar(
+            color: Color(0xFF212121),
+            child: Row(
+              children: [
 
-            iconSize: 30.0,
-//        iconSize: MediaQuery.of(context).size.height * .60,
-            currentIndex: currentIndex,
-            onItemSelected: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-              selectedIndex = 'TAB: $currentIndex';
-//            print(selectedIndex);
-              reds(selectedIndex);
-            },
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      size: 27,
+                      color: Colors.amber,
+                    ),
+                    onPressed: null,
+                  ),
+                ),
+                // ignore: deprecated_member_use
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
 
-            items: [
-              BottomNavyBarItem(
-                  icon: Icon(Icons.home),
-                  title: Text('Home'),
-                  activeColor: Color(0xFFf7d426)),
-              BottomNavyBarItem(
-                  icon: Icon(Icons.view_list),
-                  title: Text('List'),
-                  activeColor: Color(0xFFf7d426)),
-              BottomNavyBarItem(
-                  icon: Icon(Icons.person),
-                  title: Text('Profile'),
-                  activeColor: Color(0xFFf7d426)),
-            ],
+                    icon: Icon(
+                      Icons.search,
+                      size: 27,
+                    ),
+                    onPressed: () {
+                      {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Search()));
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.movie_sharp,
+                      size: 27,
+
+                    ),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Movies()));
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(right:20.0,left: 20),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.playlist_add,
+                      size: 27,
+
+                    ),
+                    onPressed: () {
+                      {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyList()));
+                      }
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
           body: CustomScrollView(
             slivers: <Widget>[
@@ -400,32 +431,6 @@ class _HomeScreenState extends State<HomeScreen> {
       viewportFraction: 0.7,
       scale: 0.8,
     );
-  }
-
-  //  Action on Bottom Bar Press
-  void reds(selectedIndex) {
-//    print(selectedIndex);
-
-    switch (selectedIndex) {
-      case "TAB: 0":
-        {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
-        }
-
-        break;
-
-      case "TAB: 1":
-        {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Movies()));
-        }
-        break;
-
-      case "TAB: 2":
-        {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
-        }
-        break;
-    }
   }
 }
 
