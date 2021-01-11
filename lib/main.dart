@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/Intro.dart';
+import 'package:konda_app/Screens/sharedloginregister.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+
+void main(){
   runApp(MyApp());
 }
 

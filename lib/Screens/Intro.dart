@@ -1,10 +1,47 @@
 import 'package:konda_app/Screens/HomeScreen.dart';
+import 'package:konda_app/Screens/sharedloginregister.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:konda_app/Widgets/slanding_clipper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'dart:math' as math;
 
+String initScreen = "";
+
+String nameKey = "_Key_name";
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  Future<bool> firstTime() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.setString(nameKey, "first");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(DarkPrimaryColor);
+    return ThemeProvider(
+      initTheme: DarkTheme,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeProvider.of(context),
+            home: initScreen == "first" ? HomeScreen(): OnboardingScreenOne(),
+          );
+        },
+      ),
+    );
+  }
+}
 
 class OnboardingScreenOne extends StatelessWidget {
   @override
@@ -326,8 +363,8 @@ class OnboardingScreenTwo extends StatelessWidget {
 
 
 
-
 class OnboardingScreenThree extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -441,10 +478,8 @@ class OnboardingScreenThree extends StatelessWidget {
                     padding: EdgeInsets.only(right: appPadding),
                     child: FloatingActionButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                            builder: (_) => HomeScreen()));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) =>Login()));
                         },
                       backgroundColor: white,
                       child: Icon(
