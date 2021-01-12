@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/UserRegister.dart';
-import 'file:///J:/FLUTTER/konda_app/lib/MainMenu.dart';
+import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
         savePref(otp,mobile, uemail, uname, id);
       });
       print("Success: "+success);
-      loginToast("Success: "+success);
+      loginSuccessToast("Successfully Logged In!");
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(
               builder: (BuildContext context) =>
@@ -66,11 +66,20 @@ class _LoginState extends State<Login> {
     } else {
       print("fail");
       print("Success: "+success);
-      loginToast("Success: "+success);
+      loginFailedToast("Something Went Wrong! Please try again later");
     }
   }
 
-  loginToast(String toast) {
+  loginSuccessToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
+  }
+  loginFailedToast(String toast) {
     return Fluttertoast.showToast(
         msg: toast,
         toastLength: Toast.LENGTH_SHORT,
@@ -177,168 +186,172 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     switch (_loginStatus) {
       case LoginStatus.notSignIn:
-        return Scaffold(
+        return new WillPopScope(
+            onWillPop: _onBackPressed,
+            child: new Scaffold(
+              body: Center(
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.all(15.0),
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+    //            color: Colors.grey.withAlpha(20),
 
-          body: Center(
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.all(15.0),
-              children: <Widget>[
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-//            color: Colors.grey.withAlpha(20),
-
-                    child: Form(
-                      key: _key,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                              "assets/images/logos.png"),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 30.0),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-
-                          //card for Email TextFormField
-                          Card(
-                            elevation: 6.0,
-                            child: TextFormField(
-                              validator: (e) {
-                                if (e.isEmpty) {
-                                  return "Please Insert Email";
-                                }
-                              },
-                              onSaved: (e) => email = e,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding:
-                                    EdgeInsets.only(left: 20, right: 15),
-                                    child:
-                                    Icon(Icons.person),
-                                  ),
-                                  contentPadding: EdgeInsets.all(18),
-                                  labelText: "Email"),
-                            ),
-                          ),
-
-                          // Card for password TextFormField
-                          Card(
-                            elevation: 6.0,
-                            child: TextFormField(
-                              validator: (e) {
-                                if (e.isEmpty) {
-                                  return "Password Can't be Empty";
-                                }
-                              },
-                              obscureText: _secureText,
-                              onSaved: (e) => password = e,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              decoration: InputDecoration(
-                                labelText: "Password",
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.only(left: 20, right: 15),
-                                  child: Icon(Icons.phonelink_lock,
-                                  ),
-                                ),
-                                suffixIcon: IconButton(
-                                  onPressed: showHide,
-                                  icon: Icon(_secureText
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                ),
-                                contentPadding: EdgeInsets.all(18),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 12,
-                          ),
-
-                          FlatButton(
-                            onPressed: null,
-                            child: Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.all(14.0),
-                          ),
-
-                          new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        child: Form(
+                          key: _key,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Image.asset(
+                                  "assets/images/logos.png"),
                               SizedBox(
-                                height: 44.0,
-                                child: RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(15.0)),
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyle(fontSize: 18.0),
-                                    ),
-                                    textColor: Colors.white,
-                                    color: Color(0xFFf7d426),
-                                    onPressed: () {
-                                      check();
-                                    }),
+                                height: 40,
                               ),
                               SizedBox(
-                                height: 44.0,
-                                child: RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(15.0)),
-                                    child: Text(
-                                      "GoTo Register",
-                                      style: TextStyle(fontSize: 18.0),
+                                height: 50,
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 30.0),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 25,
+                              ),
+
+                              //card for Email TextFormField
+                              Card(
+                                elevation: 6.0,
+                                child: TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "Please Insert Email";
+                                    }
+                                  },
+                                  onSaved: (e) => email = e,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                  decoration: InputDecoration(
+                                      prefixIcon: Padding(
+                                        padding:
+                                        EdgeInsets.only(left: 20, right: 15),
+                                        child:
+                                        Icon(Icons.person),
+                                      ),
+                                      contentPadding: EdgeInsets.all(18),
+                                      labelText: "Email"),
+                                ),
+                              ),
+
+                              // Card for password TextFormField
+                              Card(
+                                elevation: 6.0,
+                                child: TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "Password Can't be Empty";
+                                    }
+                                  },
+                                  obscureText: _secureText,
+                                  onSaved: (e) => password = e,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                  decoration: InputDecoration(
+                                    labelText: "Password",
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.only(left: 20, right: 15),
+                                      child: Icon(Icons.phonelink_lock,
+                                      ),
                                     ),
-                                    textColor: Colors.white,
-                                    color: Color(0xFFf7d426),
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Register()),
-                                      );
-                                    }),
+                                    suffixIcon: IconButton(
+                                      onPressed: showHide,
+                                      icon: Icon(_secureText
+                                          ? Icons.visibility_off
+                                          : Icons.visibility),
+                                    ),
+                                    contentPadding: EdgeInsets.all(18),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(
+                                height: 12,
+                              ),
+
+                              FlatButton(
+                                onPressed: null,
+                                child: Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: EdgeInsets.all(14.0),
+                              ),
+
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 44.0,
+                                    child: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(15.0)),
+                                        child: Text(
+                                          "Login",
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                        textColor: Colors.white,
+                                        color: Colors.amber,
+                                        onPressed: () {
+
+                                          const CircularProgressIndicator();
+                                          check();
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    height: 44.0,
+                                    child: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(15.0)),
+                                        child: Text(
+                                          "GoTo Register",
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                        textColor: Colors.white,
+                                        color: Colors.amber,
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Register()),
+                                          );
+                                        }),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            )
         );
         break;
 

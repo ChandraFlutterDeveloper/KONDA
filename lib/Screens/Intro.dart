@@ -1,6 +1,6 @@
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/UserLogin.dart';
-import 'file:///J:/FLUTTER/konda_app/lib/MainMenu.dart';
+import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';

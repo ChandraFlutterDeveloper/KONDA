@@ -27,6 +27,7 @@ class _RegisterState extends State<Register> {
   check() {
     final form = _key.currentState;
     if (form.validate()) {
+      const CircularProgressIndicator();
       form.save();
       save();
     }
@@ -50,14 +51,24 @@ class _RegisterState extends State<Register> {
             MaterialPageRoute(builder: (context) =>Login()));
       });
       print("Success: "+success);
-      registerToast("Success: "+success);
+      registerSuccessToast("Successfuly Registered...!");
     } else {
       print("Success: "+success);
-      registerToast("Success: "+success);
+      registerFailedToast("Something Went Wrong...!");
     }
   }
 
-  registerToast(String toast) {
+  registerSuccessToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
+  }
+
+  registerFailedToast(String toast) {
     return Fluttertoast.showToast(
         msg: toast,
         toastLength: Toast.LENGTH_SHORT,
@@ -224,7 +235,7 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(fontSize: 18.0),
                                 ),
                                 textColor: Colors.white,
-                                color: Color(0xFFf7d426),
+                                color: Colors.amber,
                                 onPressed: () {
                                   check();
                                 }),
@@ -239,7 +250,7 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(fontSize: 18.0),
                                 ),
                                 textColor: Colors.white,
-                                color: Color(0xFFf7d426),
+                                color: Colors.amber,
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,
