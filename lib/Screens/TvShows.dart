@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'Movies.dart';
 import 'MyList.dart';
+import 'package:http/http.dart'as http;
+import 'package:konda_app/Service/ApiService.dart';
+import 'dart:convert';
 
 
 class TvShows extends StatefulWidget {
@@ -10,6 +14,10 @@ class TvShows extends StatefulWidget {
   GlobalKey globalKey = new GlobalKey(debugLabel: 'btm_app_bar');
   @override
   _MyListState2 createState() => _MyListState2();
+}
+Future<List> get_movies() async {
+  final response = await http.get(ApiService.BASE_URL + "GetMovies");
+  return json.decode(response.body);
 }
 
 class _MyListState2 extends State<TvShows> {
@@ -70,6 +78,10 @@ class _MyListState2 extends State<TvShows> {
         ),
 
 
+        /*<-----------Bottom Navigation Bar----------- >*/
+
+
+
         backgroundColor: Colors.black,
         bottomNavigationBar: new BottomAppBar(
             child: new Row(
@@ -86,7 +98,11 @@ class _MyListState2 extends State<TvShows> {
                             context,
                             MaterialPageRoute(builder: (context) => HomeScreen()))),
                 IconButton(
-                    icon: Icon(Icons.search),
+                    icon: GestureDetector(
+                        onTap: (){
+                          // get_movies();
+                        },
+                        child: Icon(Icons.search)),
                     disabledColor: Colors.green,
                     onPressed: _currentIndex == 1
                         ? null

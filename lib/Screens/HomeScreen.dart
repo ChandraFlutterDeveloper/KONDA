@@ -1,21 +1,15 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/Movies.dart';
-import 'package:konda_app/Screens/MyList.dart';
-import 'package:konda_app/Screens/Search.dart';
 import 'package:konda_app/constants.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'dart:convert';
-import 'package:konda_app/widgets/profile_list_item.dart';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/Screens/Details.dart';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:konda_app/Screens/Profile.dart';
 
@@ -36,6 +30,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
             home: HomeScreen(),
+
           );
         },
       ),
@@ -49,6 +44,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  /*<-------------Center Body-------------->*/
+
   Future<List> getMovie() async {
     final response = await http.get(ApiService.BASE_URL + "Movie_List");
     return json.decode(response.body);
@@ -61,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final response = await http.get(ApiService.BASE_URL + "Slider_List");
     return json.decode(response.body);
   }
+
+
 
 
   int currentIndex = 0;
@@ -84,6 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 constraints: BoxConstraints.expand(height: 225),
                 child: imageSlider(context)),
           ),
+
+          /*<----------------Come Enjoy With Us------------->*/
+
           SliverToBoxAdapter(
             child: SizedBox(
               height: 284.0,
@@ -126,6 +129,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+
+
+
+          /*<------------Popular SHows------------->*/
+
           SliverToBoxAdapter(
             child: SizedBox(
               height: 261.0,
@@ -172,19 +181,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+  /*<--------Slider-------------->*/
+
   Swiper imageSlider(context) {
-    return new Swiper(
-      autoplay: true,
-      itemBuilder: (BuildContext context, int index) {
-        return new Image.network(
-          "https://konda.co.in/userAssets/img/covers/cover3.jpg",
-            height: 124.0, width: 100.0, fit: BoxFit.cover,
-        );
-      },
-      itemCount: 10,
-      viewportFraction: 0.7,
-      scale: 0.8,
-    );
+    return  new Swiper(
+        autoplay: true,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
+            },
+            child: new Image.network(
+              "https://konda.co.in/userAssets/img/covers/cover3.jpg",
+                height: 124.0, width: 100.0, fit: BoxFit.cover,
+            ),
+          );
+
+        },
+        itemCount: 10,
+        viewportFraction: 0.7,
+        scale: 0.8,
+      );
+
   }
 
   //  Action on Bottom Bar Press
@@ -214,6 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+
+/*<-------------Cards----------->*/
+
+
 class Items extends StatelessWidget {
   List list;
 
@@ -242,20 +265,47 @@ class Items extends StatelessWidget {
                     LinearProgressIndicator(value: 50.0),
                     Row(
                       children: <Widget>[
+                        
                         IconButton(
                             onPressed: null,
                             icon: Icon(
                               Icons.info_outlined,
                               size: 22.0,
                               color: Colors.white,
-                            )),
-                        IconButton(
-                            onPressed: null,
+                            ),
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert_sharp),
+                          onSelected: choiceAction,
+                          itemBuilder: (BuildContext context) {
+                            return Constants.choices.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
+                          },
+                        ),
+
+                      /*  DropdownButton<String>(
+                          icon: IconButton(icon: Icon(Icons.add),),
+                          value: 'Add to list',
+                          onTap: (){
+                            DropdownButton()
+                          },
+                        ),*/
+                        /*IconButton(
+                            onPressed: (){
+                             PopupMenuButton(
+
+                                child:Text('Add To List')
+                              );
+                            },
                             icon: Icon(
                               Icons.more_vert_sharp,
                               size: 22.0,
                               color: Colors.white,
-                            )),
+                            )),*/
                       ],
                     )
                   ]),
@@ -265,4 +315,27 @@ class Items extends StatelessWidget {
       },
     );
   }
+}
+
+
+class Constants {
+  static const String FirstItem = 'Add to PlayList';
+  /*static const String SecondItem = 'Second Item';
+  static const String ThirdItem = 'Third Item';*/
+
+  static const List<String> choices = <String>[
+    FirstItem,
+    /*SecondItem,
+    ThirdItem,*/
+  ];
+}
+
+void choiceAction(String choice) {
+  if (choice == Constants.FirstItem) {
+    print('I First Item');
+ /* } else if (choice == Constants.SecondItem) {
+    print('I Second Item');
+  } else if (choice == Constants.ThirdItem) {
+    print('I Third Item');
+  */}
 }

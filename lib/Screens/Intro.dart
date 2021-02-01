@@ -1,6 +1,5 @@
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/UserLogin.dart';
-import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -11,20 +10,13 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'dart:math' as math;
 
-String initScreen = "";
-
-String nameKey = "_Key_name";
+String initScreen;
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  Future<bool> firstTime() async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.setString(nameKey, "first");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +28,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home: initScreen == "first" ? HomeScreen(): OnboardingScreenOne(),
+            home: OnboardingScreenOne(),
           );
         },
       ),
@@ -44,23 +36,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+/*<-----------Screen 1----------->*/
+
 class OnboardingScreenOne extends StatefulWidget {
   @override
   _OnboardingScreenOne createState() => _OnboardingScreenOne();
 }
 
-enum FirstTime { notFirst, First }
+enum FirstTime { First, notFirst}
 
 class _OnboardingScreenOne extends State<OnboardingScreenOne> {
   FirstTime _FirstTime = FirstTime.First;
 
-  savePref(String first) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      preferences.setString("first", first);
-      preferences.commit();
-    });
-  }
 
   String value, id;
 
@@ -70,7 +58,7 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
       value = preferences.getString("first");
 
       id = preferences.getString("id");
-      _FirstTime = value != null ? FirstTime.notFirst : FirstTime.First;
+      _FirstTime = value == 'first' ? FirstTime.notFirst : FirstTime.First;
     });
   }
 
@@ -87,7 +75,6 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
     Size size = MediaQuery.of(context).size;
     switch (_FirstTime) {
       case FirstTime.First:
-        savePref("first");
         return Scaffold(
           body: Container(
             child: Stack(
@@ -248,7 +235,7 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
   }
 }
 
-
+/*<-----------Screen 2----------->*/
 
 class OnboardingScreenTwo extends StatelessWidget {
   @override
@@ -409,7 +396,7 @@ class OnboardingScreenTwo extends StatelessWidget {
   }
 }
 
-
+/*<-----------Screen 3----------->*/
 
 class OnboardingScreenThree extends StatelessWidget {
 

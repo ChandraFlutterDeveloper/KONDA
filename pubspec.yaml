@@ -47,7 +47,7 @@ dependencies:
   http: ^0.12.2
   url_launcher: ^5.7.10
   lottie: ^0.7.0+1
-  image_picker: ^0.6.7+17
+  image_picker: ^0.6.7+21
   share: ^0.6.0+1
   fluttertoast: ^3.0.4
   avatar_glow: ^0.1.0

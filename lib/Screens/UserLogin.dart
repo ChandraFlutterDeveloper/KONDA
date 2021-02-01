@@ -22,6 +22,14 @@ class _LoginState extends State<Login> {
 
   bool _secureText = true;
 
+  saveIntro(String first) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setString("first", first);
+    });
+  }
+
+
   showHide() {
     setState(() {
       _secureText = !_secureText;
@@ -180,6 +188,7 @@ class _LoginState extends State<Login> {
     // TODO: implement initState
     super.initState();
     getPref();
+    saveIntro("first");
   }
 
   @override

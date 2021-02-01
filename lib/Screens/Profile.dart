@@ -1,6 +1,8 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:konda_app/Screens/Movies.dart';
+import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/Screens/login_page.dart';
 import 'package:konda_app/constants.dart';
 
@@ -44,6 +46,11 @@ class ProfileScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).backgroundColor,
             appBar:AppBar(
               title: Text('Profile', style: TextStyle(color: Colors.white),),
+              leading: GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                  child: Icon(Icons.arrow_back_ios,color: Colors.grey,)),
             ),
 
             body: Column(
@@ -114,7 +121,13 @@ class ProfileScreen extends StatelessWidget {
                             leading: Icon(Icons.speaker_notes_sharp,color: Colors.redAccent,),
                             title: Text('My Play List',style: TextStyle(fontSize: 20),),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                            onTap: (){},
+                            onTap: (){
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>MyList(),
+                                  )
+                              );
+                            },
                           ),
 
 
@@ -122,7 +135,13 @@ class ProfileScreen extends StatelessWidget {
                             leading: Icon(Icons.event_note_outlined,color: Colors.blueGrey,),
                             title: Text('Movies',style: TextStyle(fontSize: 20)),
                             trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                            onTap: (){},
+                            onTap: (){
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>Movies(),
+                                  )
+                              );
+                            },
                           ),
                           Divider(
                             thickness: 5,

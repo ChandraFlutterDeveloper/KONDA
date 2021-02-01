@@ -1,6 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
@@ -12,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:konda_app/constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MainMenu extends StatefulWidget {
   final VoidCallback signOut;
@@ -23,11 +26,14 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  File _image;
+
   signOut() {
     setState(() {
       widget.signOut();
     });
   }
+
   int _currentIndex = 0;
   PageController _pageController;
 
@@ -38,6 +44,7 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   int currentIndex = 0;
+
   // String selectedIndex = 'TAB: 0';
 
   String email = "", name = "", id = "";
@@ -63,27 +70,26 @@ class _MainMenuState extends State<MainMenu> {
     _pageController = PageController();
   }
 
-
   Future<bool> _onBackPressed() {
     return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
-        actions: <Widget>[
-          new GestureDetector(
-            onTap: () => Navigator.of(context).pop(false),
-            child: roundedButton(
-                "No", Color(0xFF212121), const Color(0xFFFFFFFF)),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(false),
+                child: roundedButton(
+                    "No", Color(0xFF212121), const Color(0xFFFFFFFF)),
+              ),
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(true),
+                child: roundedButton(
+                    " Yes ", const Color(0xFFFFC107), const Color(0xFFFFFFFF)),
+              ),
+            ],
           ),
-          new GestureDetector(
-            onTap: () => Navigator.of(context).pop(true),
-            child: roundedButton(
-                " Yes ", const Color(0xFFFFC107), const Color(0xFFFFFFFF)),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
@@ -110,6 +116,7 @@ class _MainMenuState extends State<MainMenu> {
     );
     return loginBtn;
   }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
@@ -139,10 +146,15 @@ class _MainMenuState extends State<MainMenu> {
                     child: Center(
                       heightFactor: SpacingUnit.w * 1.5,
                       widthFactor: SpacingUnit.w * 1.5,
-                      child: Icon(
-                        LineAwesomeIcons.pen,
-                        color: DarkPrimaryColor,
-                        size: ScreenUtil().setSp(SpacingUnit.w * 1.5),
+                      child: GestureDetector(
+                        onTap: () {
+                          _openCamera();
+                        },
+                        child: Icon(
+                          LineAwesomeIcons.retro_camera,
+                          color: DarkPrimaryColor,
+                          size: ScreenUtil().setSp(SpacingUnit.w * 1.5),
+                        ),
                       ),
                     ),
                   ),
@@ -217,7 +229,6 @@ class _MainMenuState extends State<MainMenu> {
                         icon: LineAwesomeIcons.user_plus,
                         text: 'Invite a Friend',
                       ),
-
                     ],
                   ),
                 ),
@@ -227,8 +238,7 @@ class _MainMenuState extends State<MainMenu> {
           appBar: AppBar(
             actions: <Widget>[
               Image(
-                image: AssetImage(
-                    'assets/images/logos.png'),
+                image: AssetImage('assets/images/logos.png'),
               ),
               IconButton(
                 onPressed: () {
@@ -238,17 +248,14 @@ class _MainMenuState extends State<MainMenu> {
               ),
               IconButton(
                 onPressed: () {
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()));
                 },
                 icon: Icon(Icons.account_circle),
               ),
             ],
           ),
-          body:  SizedBox.expand(
+          body: SizedBox.expand(
             child: PageView(
               controller: _pageController,
               onPageChanged: (index) {
@@ -263,40 +270,37 @@ class _MainMenuState extends State<MainMenu> {
             ),
           ),
           bottomNavigationBar: BottomNavyBar(
-        backgroundColor: DarkPrimaryColor,
-        selectedIndex: _currentIndex,
-        showElevation: true, // use this to remove appBar's elevation
-        onItemSelected: (index) => setState(() {
-          _currentIndex = index;
-          _pageController.animateToPage(index,
-              duration: Duration(milliseconds: 300), curve: Curves.ease);
-          _pageController.jumpToPage(index);
-        }),
-        items: [
-          BottomNavyBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-            activeColor: Colors.amberAccent,
+            backgroundColor: DarkPrimaryColor,
+            selectedIndex: _currentIndex,
+            showElevation: true,
+            // use this to remove appBar's elevation
+            onItemSelected: (index) => setState(() {
+              _currentIndex = index;
+              _pageController.animateToPage(index,
+                  duration: Duration(milliseconds: 300), curve: Curves.ease);
+
+            }),
+            items: [
+              BottomNavyBarItem(
+                icon: Icon(Icons.home),
+                title: Text('Home'),
+                activeColor: Colors.amberAccent,
+              ),
+              BottomNavyBarItem(
+                  icon: Icon(Icons.play_circle_fill),
+                  title: Text('Movies'),
+                  activeColor: Colors.purpleAccent),
+              BottomNavyBarItem(
+                  icon: Icon(Icons.search),
+                  title: Text('Search'),
+                  activeColor: Colors.orangeAccent),
+              BottomNavyBarItem(
+                  icon: Icon(Icons.library_add),
+                  title: Text('PlayList'),
+                  activeColor: Colors.blue),
+            ],
           ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.play_circle_fill),
-              title: Text('Movies'),
-              activeColor: Colors.purpleAccent
-          ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.search),
-              title: Text('Search'),
-              activeColor: Colors.orangeAccent
-          ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.library_add),
-              title: Text('PlayList'),
-              activeColor: Colors.blue
-          ),
-        ],
-      ),
-        )
-    );
+        ));
   }
 
   //  Action on Bottom Bar Press
@@ -304,19 +308,20 @@ class _MainMenuState extends State<MainMenu> {
 //    print(selectedIndex);
 
     switch (selectedIndex) {
-      case "TAB: 0":
+      case 0:
         {
           callToast("Tab 0");
+
         }
         break;
 
-      case "TAB: 1":
+      case 1:
         {
           callToast("Tab 1");
         }
         break;
 
-      case "TAB: 2":
+      case 2:
         {
           callToast("Tab 2");
         }
@@ -333,5 +338,13 @@ class _MainMenuState extends State<MainMenu> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  _openCamera() async {
+    // ignore: deprecated_member_use
+    _image = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (_image != null) {
+      debugPrint(_image.path);
+    }
   }
 }

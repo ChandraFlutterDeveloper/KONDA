@@ -51,6 +51,10 @@ class _DetailsState extends State<Details> {
     return Scaffold(
 
         body: CustomScrollView(slivers: <Widget>[
+
+
+          /*<-----------Top image----------->*/
+
           SliverAppBar(
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -61,6 +65,11 @@ class _DetailsState extends State<Details> {
                       width: 150,
                       child: Image.network('https://konda.co.in/userAssets/img/covers/cover.jpg'),
                     ),
+
+
+                    /*<-----------Mid Row----------->*/
+
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -86,6 +95,9 @@ class _DetailsState extends State<Details> {
                                 TextStyle(color: Colors.white, fontSize: 15)),
                       ],
                     ),
+
+                    /*<-----------Play Button----------->*/
+
                     Padding(
                       padding: const EdgeInsets.only(right:25,left:25,top: 8.0),
                       child: Container(
@@ -105,6 +117,11 @@ class _DetailsState extends State<Details> {
                                     color: Colors.black, fontSize: 16))),
                       ),
                     ),
+
+
+                    /*<-----------Content----------->*/
+
+
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 20, left: 30, right: 20, bottom: 20),
@@ -120,6 +137,9 @@ class _DetailsState extends State<Details> {
                           child: Text('Starring ',
                               style: TextStyle(color: Colors.white))),
                     ),
+
+                    /*<-----------Last Row----------->*/
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -176,6 +196,9 @@ class _DetailsState extends State<Details> {
                     )
                   ],
                 ),
+
+                /*<-----------backgroung image----------->*/
+
                 decoration: BoxDecoration(
                     image: DecorationImage(
 
@@ -190,8 +213,7 @@ class _DetailsState extends State<Details> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.pop(context);
               },
             ),
           )
