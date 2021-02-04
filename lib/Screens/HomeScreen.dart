@@ -238,6 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 class Items extends StatelessWidget {
+
+  Future<List> getData() async {
+    final response = await http.get(ApiService.BASE_URL+"Movie_List");
+    return json.decode(response.body);
+  }
+
   List list;
 
   Items({this.list});
@@ -265,14 +271,26 @@ class Items extends StatelessWidget {
                     LinearProgressIndicator(value: 50.0),
                     Row(
                       children: <Widget>[
-                        
-                        IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.info_outlined,
-                              size: 22.0,
-                              color: Colors.white,
-                            ),
+
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.info_outline_rounded),
+                          onSelected: choiceAction,
+                          itemBuilder: (BuildContext context) {
+                            return Constants.detail.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Row(
+                                  children: [
+                                    Image.network(ApiService.BASE_URL+list[i]['v_poster']),
+                                    Text(list[i]['v_title']),
+                                    Text(list[i]['v_descr']),
+
+                                  ],
+                                )
+
+                              );
+                            }).toList();
+                          },
                         ),
                         PopupMenuButton<String>(
                           icon: Icon(Icons.more_vert_sharp),
@@ -320,6 +338,7 @@ class Items extends StatelessWidget {
 
 class Constants {
   static const String FirstItem = 'Add to PlayList';
+  static const String Next= 'Go For Details';
   /*static const String SecondItem = 'Second Item';
   static const String ThirdItem = 'Third Item';*/
 
@@ -328,11 +347,21 @@ class Constants {
     /*SecondItem,
     ThirdItem,*/
   ];
+  static const List<String> detail = <String>[
+
+    Next,
+    /*SecondItem,
+    ThirdItem,*/
+  ];
 }
+
 
 void choiceAction(String choice) {
   if (choice == Constants.FirstItem) {
     print('I First Item');
+    if(choice == Constants.Next){
+      print('Next Item');
+    }
  /* } else if (choice == Constants.SecondItem) {
     print('I Second Item');
   } else if (choice == Constants.ThirdItem) {

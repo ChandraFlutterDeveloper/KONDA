@@ -5,18 +5,30 @@ import 'package:image_picker/image_picker.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
+import 'package:konda_app/Screens/Privacy%20Policy.dart';
 import 'package:konda_app/Screens/Profile.dart';
 import 'package:konda_app/Screens/Search.dart';
 import 'package:konda_app/Widgets/profile_list_item.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:konda_app/constants.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:documents_picker/documents_picker.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 class MainMenu extends StatefulWidget {
+
+
+
+
+
+
   final VoidCallback signOut;
 
   MainMenu(this.signOut);
@@ -198,6 +210,9 @@ class _MainMenuState extends State<MainMenu> {
       ],
     );
 
+
+    /*<--------------Drawer----------->*/
+
     return new WillPopScope(
         onWillPop: _onBackPressed,
         child: new Scaffold(
@@ -209,9 +224,15 @@ class _MainMenuState extends State<MainMenu> {
                 Expanded(
                   child: ListView(
                     children: <Widget>[
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.user_shield,
-                        text: 'Privacy',
+                      GestureDetector(
+                        onTap:(){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Privacy()));
+                        },
+                        child: ProfileListItem(
+                          icon: LineAwesomeIcons.user_shield,
+                          text: 'Privacy',
+                        ),
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.history,
@@ -225,9 +246,15 @@ class _MainMenuState extends State<MainMenu> {
                         icon: LineAwesomeIcons.cog,
                         text: 'Settings',
                       ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.user_plus,
-                        text: 'Invite a Friend',
+                      GestureDetector(
+                        onTap: (){
+                           share();
+
+                        },
+                        child: ProfileListItem(
+                          icon: LineAwesomeIcons.user_plus,
+                          text: 'Invite a Friend',
+                        ),
                       ),
                     ],
                   ),
@@ -269,6 +296,9 @@ class _MainMenuState extends State<MainMenu> {
               ],
             ),
           ),
+
+          /*<-------------Bottom Navigation---------->*/
+
           bottomNavigationBar: BottomNavyBar(
             backgroundColor: DarkPrimaryColor,
             selectedIndex: _currentIndex,
@@ -348,3 +378,32 @@ class _MainMenuState extends State<MainMenu> {
     }
   }
 }
+Future<void> share() async {
+  await FlutterShare.share(
+      title: 'Example share',
+      text: 'Example share text',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Example Chooser Title'
+  );
+}
+Future<void> shareFile() async {
+  List<dynamic> docs = await DocumentsPicker.pickDocuments;
+  if (docs == null || docs.isEmpty) return null;
+
+  await FlutterShare.shareFile(
+    title: 'Example share',
+    text: 'Example share text',
+    filePath: docs[0] as String,
+  );
+}
+/*
+_launchURL() async {
+  const url = 'https://flutter.dev';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+*/
+

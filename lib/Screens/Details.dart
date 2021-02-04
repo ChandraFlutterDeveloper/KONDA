@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:konda_app/Screens/HomeScreen.dart';
 import 'dart:convert';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:konda_app/constants.dart';
 import 'package:konda_app/Widgets/Video.dart';
-
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:konda_app/Service/ApiService.dart';
 

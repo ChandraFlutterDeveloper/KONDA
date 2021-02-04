@@ -233,7 +233,7 @@ class _SearchState extends State<Search> {
     return jsonDecode(response.body);
   }
 
-  Future search_movies() async {
+  Future<List> search_movies() async {
     print("search: "+usrSearch);
     final response = await http.post(ApiService.BASE_URL + "SearchMovies", body: {
       "search" : usrSearch,
