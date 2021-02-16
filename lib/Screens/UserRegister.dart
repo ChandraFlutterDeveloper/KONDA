@@ -23,11 +23,19 @@ class _RegisterState extends State<Register> {
       _secureText = !_secureText;
     });
   }
+  bool visible = false;
+
+  loadProgress(){
+
+    setState(() {
+      visible = true;
+    });
+    check();
+  }
 
   check() {
     final form = _key.currentState;
     if (form.validate()) {
-      const CircularProgressIndicator();
       form.save();
       save();
     }
@@ -47,12 +55,16 @@ class _RegisterState extends State<Register> {
     String success = data['success'];
     if (!value) {
       setState(() {
+        visible = false;
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) =>Login()));
       });
       print("Success: "+success);
       registerSuccessToast("Successfuly Registered...!");
     } else {
+      setState(() {
+        visible = false;
+      });
       print("Success: "+success);
       registerFailedToast("Something Went Wrong...!");
     }
@@ -98,9 +110,12 @@ class _RegisterState extends State<Register> {
                     children: <Widget>[
                       Image.asset(
                           "assets/images/logos.png"),
+
                       SizedBox(
-                        height: 40,
+                        height: 25,
                       ),
+
+
                       SizedBox(
                         height: 50,
                         child: Text(
@@ -108,10 +123,17 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(color: Colors.white, fontSize: 30.0),
                         ),
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
 
+                      Visibility(
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: visible,
+                          child: Container(
+                              margin: EdgeInsets.only(top: 10, bottom: 10),
+                              child: CircularProgressIndicator()
+                          )
+                      ),
                       //card for Fullname TextFormField
                       Card(
                         elevation: 6.0,
@@ -235,9 +257,9 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(fontSize: 18.0),
                                 ),
                                 textColor: Colors.white,
-                                color: Colors.amber,
+                                color: Colors.blueAccent,
                                 onPressed: () {
-                                  check();
+                                  loadProgress();
                                 }),
                           ),
                           SizedBox(
@@ -250,7 +272,7 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(fontSize: 18.0),
                                 ),
                                 textColor: Colors.white,
-                                color: Colors.amber,
+                                color: Colors.red,
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,

@@ -36,6 +36,16 @@ class _LoginState extends State<Login> {
     });
   }
 
+  bool visible = false;
+
+  loadProgress(){
+
+    setState(() {
+      visible = true;
+    });
+    check();
+  }
+
   check() {
     final form = _key.currentState;
     if (form.validate()) {
@@ -64,6 +74,7 @@ class _LoginState extends State<Login> {
       setState(() {
         _loginStatus = LoginStatus.signIn;
         savePref(otp,mobile, uemail, uname, id);
+        visible = false;
       });
       print("Success: "+success);
       loginSuccessToast("Successfully Logged In!");
@@ -72,6 +83,10 @@ class _LoginState extends State<Login> {
               builder: (BuildContext context) =>
                   MainMenu(signOut)));
     } else {
+
+      setState(() {
+        visible = false;
+      });
       print("fail");
       print("Success: "+success);
       loginFailedToast("Something Went Wrong! Please try again later");
@@ -113,14 +128,17 @@ class _LoginState extends State<Login> {
   signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      preferences.setString("mobile", null);
-      preferences.setString("name", null);
-      preferences.setString("email", null);
-      preferences.setString("id", null);
-      preferences.setString("otp", null);
-      preferences.commit();
+      preferences.setString("mobile",null);
+      preferences.setString("name",null);
+      preferences.setString("email",null);
+      preferences.setString("id",null);
+      preferences.setString("otp",null);
       _loginStatus = LoginStatus.notSignIn;
-
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Login(),
+        ),);
     });
   }
 
@@ -131,7 +149,15 @@ class _LoginState extends State<Login> {
     setState(() {
       value = preferences.getString("id");
 
-      _loginStatus = value != null ? LoginStatus.signIn : LoginStatus.notSignIn;
+      if(value != null){
+        _loginStatus = LoginStatus.signIn;
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    MainMenu(signOut)));
+      }else{
+        _loginStatus = LoginStatus.notSignIn;
+      }
     });
   }
 
@@ -203,6 +229,7 @@ class _LoginState extends State<Login> {
                   shrinkWrap: true,
                   padding: EdgeInsets.all(15.0),
                   children: <Widget>[
+
                     Center(
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
@@ -216,8 +243,9 @@ class _LoginState extends State<Login> {
                               Image.asset(
                                   "assets/images/logos.png"),
                               SizedBox(
-                                height: 40,
+                                height: 35,
                               ),
+
                               SizedBox(
                                 height: 50,
                                 child: Text(
@@ -226,8 +254,16 @@ class _LoginState extends State<Login> {
                                       color: Colors.white, fontSize: 30.0),
                                 ),
                               ),
-                              SizedBox(
-                                height: 25,
+
+                              Visibility(
+                                  maintainSize: true,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  visible: visible,
+                                  child: Container(
+                                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                                      child: CircularProgressIndicator()
+                                  )
                               ),
 
                               //card for Email TextFormField
@@ -323,11 +359,9 @@ class _LoginState extends State<Login> {
                                           style: TextStyle(fontSize: 18.0),
                                         ),
                                         textColor: Colors.white,
-                                        color: Colors.amber,
+                                        color: Colors.blueAccent,
                                         onPressed: () {
-
-                                          const CircularProgressIndicator();
-                                          check();
+                                          loadProgress();
                                         }),
                                   ),
                                   SizedBox(
@@ -341,7 +375,7 @@ class _LoginState extends State<Login> {
                                           style: TextStyle(fontSize: 18.0),
                                         ),
                                         textColor: Colors.white,
-                                        color: Colors.amber,
+                                        color: Colors.red,
                                         onPressed: () {
                                           Navigator.pushReplacement(
                                             context,

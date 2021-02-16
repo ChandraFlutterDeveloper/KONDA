@@ -1,3 +1,4 @@
+import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/UserLogin.dart';
 import 'package:konda_app/constants.dart';
@@ -59,6 +60,24 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
 
       id = preferences.getString("id");
       _FirstTime = value == 'first' ? FirstTime.notFirst : FirstTime.First;
+    });
+  }
+
+
+  signOut() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setString("mobile",null);
+      preferences.setString("name",null);
+      preferences.setString("email",null);
+      preferences.setString("id",null);
+      preferences.setString("otp",null);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+          builder: (_) => Login(),
+      ),);
+
     });
   }
 
@@ -229,7 +248,13 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
         break;
 
       case FirstTime.notFirst:
-        return Login();
+        print("user id ");
+        print(id);
+        if(id==null) {
+          return Login();
+        }else{
+          return MainMenu(signOut);
+        }
         break;
     }
   }

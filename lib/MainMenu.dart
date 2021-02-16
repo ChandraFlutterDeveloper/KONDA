@@ -15,20 +15,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:konda_app/constants.dart';
 import 'dart:io';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:documents_picker/documents_picker.dart';
 import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-
+import 'package:http/http.dart' as http;
 
 class MainMenu extends StatefulWidget {
-
-
-
-
-
-
   final VoidCallback signOut;
 
   MainMenu(this.signOut);
@@ -39,6 +29,72 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   File _image;
+
+  final picker = ImagePicker();
+
+
+  _imgFromCamera() async {
+    var pickedImage = await picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    setState(() {
+      _image = File(pickedImage.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    var pickedImage = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    setState(() {
+      _image = File(pickedImage.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+
+  Future uploadImage()async{
+    final uri = Uri.parse("https://konda.co.in/image_upload");
+    var request = http.MultipartRequest('POST',uri);
+    var pic = await http.MultipartFile.fromPath("image", _image.path);
+    request.files.add(pic);
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Image Uploded');
+    }else{
+      print('Image Not Uploded');
+    }
+    setState(() {
+
+    });
+  }
 
   signOut() {
     setState(() {
@@ -68,10 +124,11 @@ class _MainMenuState extends State<MainMenu> {
       id = preferences.getString("id");
       email = preferences.getString("email");
       name = preferences.getString("name");
+
+      print("id: " + id);
+      print("user: " + email);
+      print("name: " + name);
     });
-    print("id" + id);
-    print("user" + email);
-    print("name" + name);
   }
 
   @override
@@ -79,6 +136,7 @@ class _MainMenuState extends State<MainMenu> {
     // TODO: implement initState
     super.initState();
     getPref();
+
     _pageController = PageController();
   }
 
@@ -129,6 +187,9 @@ class _MainMenuState extends State<MainMenu> {
     return loginBtn;
   }
 
+
+  /*<--------Upper Part Of Drawer-------------->*/
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
@@ -141,11 +202,16 @@ class _MainMenuState extends State<MainMenu> {
             margin: EdgeInsets.only(top: SpacingUnit.w * 3),
             child: Stack(
               children: <Widget>[
-                CircleAvatar(
-                  radius: SpacingUnit.w * 5,
-                  backgroundImage: NetworkImage(
-                      'https://hemantchandra.com/assets/img/profile-img.jpg'),
-                ),
+                Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: _image == null  //profilePhoto which is File object
+                                ? AssetImage(
+                                "assets/images/avtar.png")
+                                : FileImage(_image), // picked file
+                            fit: BoxFit.fill)),
+                  ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Container(
@@ -160,7 +226,7 @@ class _MainMenuState extends State<MainMenu> {
                       widthFactor: SpacingUnit.w * 1.5,
                       child: GestureDetector(
                         onTap: () {
-                          _openCamera();
+                          _showPicker(context);
                         },
                         child: Icon(
                           LineAwesomeIcons.retro_camera,
@@ -210,7 +276,6 @@ class _MainMenuState extends State<MainMenu> {
       ],
     );
 
-
     /*<--------------Drawer----------->*/
 
     return new WillPopScope(
@@ -225,9 +290,11 @@ class _MainMenuState extends State<MainMenu> {
                   child: ListView(
                     children: <Widget>[
                       GestureDetector(
-                        onTap:(){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Privacy()));
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Privacy()));
                         },
                         child: ProfileListItem(
                           icon: LineAwesomeIcons.user_shield,
@@ -242,14 +309,13 @@ class _MainMenuState extends State<MainMenu> {
                         icon: LineAwesomeIcons.question_circle,
                         text: 'Help & Support',
                       ),
-                      ProfileListItem(
+                      /* ProfileListItem(
                         icon: LineAwesomeIcons.cog,
                         text: 'Settings',
-                      ),
+                      ),*/
                       GestureDetector(
-                        onTap: (){
-                           share();
-
+                        onTap: () {
+                          share();
                         },
                         child: ProfileListItem(
                           icon: LineAwesomeIcons.user_plus,
@@ -297,7 +363,9 @@ class _MainMenuState extends State<MainMenu> {
             ),
           ),
 
+
           /*<-------------Bottom Navigation---------->*/
+
 
           bottomNavigationBar: BottomNavyBar(
             backgroundColor: DarkPrimaryColor,
@@ -308,7 +376,6 @@ class _MainMenuState extends State<MainMenu> {
               _currentIndex = index;
               _pageController.animateToPage(index,
                   duration: Duration(milliseconds: 300), curve: Curves.ease);
-
             }),
             items: [
               BottomNavyBarItem(
@@ -341,7 +408,6 @@ class _MainMenuState extends State<MainMenu> {
       case 0:
         {
           callToast("Tab 0");
-
         }
         break;
 
@@ -378,15 +444,15 @@ class _MainMenuState extends State<MainMenu> {
     }
   }
 }
+
 Future<void> share() async {
   await FlutterShare.share(
-      title: 'Example share',
-      text: 'Example share text',
-      linkUrl: 'https://flutter.dev/',
-      chooserTitle: 'Example Chooser Title'
-  );
+      title: 'KONDA',
+      text: 'Enjoy With KONDA',
+      linkUrl: 'https://play.google.com/store/apps/details?id=in.co.konda.htkc.konda_app',
+      chooserTitle: 'Share With Your Friends...');
 }
-Future<void> shareFile() async {
+/*Future<void> shareFile() async {
   List<dynamic> docs = await DocumentsPicker.pickDocuments;
   if (docs == null || docs.isEmpty) return null;
 
@@ -395,15 +461,5 @@ Future<void> shareFile() async {
     text: 'Example share text',
     filePath: docs[0] as String,
   );
-}
-/*
-_launchURL() async {
-  const url = 'https://flutter.dev';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-*/
+}*/
 
