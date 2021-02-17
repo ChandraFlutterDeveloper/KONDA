@@ -60,6 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return json.decode(response.body);
   }
 
+  Future<List> getAnimated() async {
+    final response = await http.get(ApiService.BASE_URL + "Animated_List");
+    return json.decode(response.body);
+  }
 
 
 
@@ -130,9 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-
-
-
           /*<------------Popular SHows------------->*/
 
           SliverToBoxAdapter(
@@ -163,6 +164,52 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                           if (ss.hasData) {
                             return Items(list: ss.data);
+                          } else {
+                            return Center(
+                              child: const CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+
+          /*<----------------Animated------------->*/
+
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 284.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                     right: 230.0),
+                    child: Text('Animation',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 20.0),
+                      height: 200,
+                      child: FutureBuilder<List>(
+                        future: getAnimated(),
+
+                        // ignore: missing_return
+                        builder: (ctx, ss) {
+                          print("Aya");
+                          if (ss.hasError) {
+                            print(ss.error);
+                          }
+                          if (ss.hasData) {
+                            return AnimatedItem(list: ss.data);
                           } else {
                             return Center(
                               child: const CircularProgressIndicator(),
@@ -247,6 +294,101 @@ class Items extends StatelessWidget {
   List list;
 
   Items({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: list == null ? 0 : list.length,
+      itemBuilder: (ctx, i) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => Details()));
+                },
+                child: Container(
+                  width: 100,
+                  child: Column(children: [
+                    Image.network(ApiService.BASE_URL + list[i]['v_poster'],
+                        height: 124.0, width: 100.0, fit: BoxFit.cover),
+                    LinearProgressIndicator(value: 50.0),
+                    Row(
+                      children: <Widget>[
+
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.info_outline_rounded),
+                          onSelected: choiceAction,
+                          itemBuilder: (BuildContext context) {
+                            return Constants.detail.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Row(
+                                  children: [
+                                    Image.network(ApiService.BASE_URL+list[i]['v_poster']),
+                                    Text(list[i]['v_title']),
+                                    Text(list[i]['v_descr']),
+
+                                  ],
+                                )
+
+                              );
+                            }).toList();
+                          },
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert_sharp),
+                          onSelected: choiceAction,
+                          itemBuilder: (BuildContext context) {
+                            return Constants.choices.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
+                          },
+                        ),
+
+                      /*  DropdownButton<String>(
+                          icon: IconButton(icon: Icon(Icons.add),),
+                          value: 'Add to list',
+                          onTap: (){
+                            DropdownButton()
+                          },
+                        ),*/
+                        /*IconButton(
+                            onPressed: (){
+                             PopupMenuButton(
+
+                                child:Text('Add To List')
+                              );
+                            },
+                            icon: Icon(
+                              Icons.more_vert_sharp,
+                              size: 22.0,
+                              color: Colors.white,
+                            )),*/
+                      ],
+                    )
+                  ]),
+                )),
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class AnimatedItem extends StatelessWidget {
+
+
+  List list;
+
+  AnimatedItem({this.list});
 
   @override
   Widget build(BuildContext context) {
