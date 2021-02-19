@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/Screens/login_page.dart';
+import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,6 +45,7 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
 
+  String u_id = '';
 
   File _image;
   final picker = ImagePicker();
@@ -94,21 +97,33 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
 
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      u_id = preferences.getString("id");
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPref();
+  }
+
+
   Future uploadImage()async{
-    final uri = Uri.parse("https://konda.co.in/image_upload");
+    final uri = Uri.parse(ApiService.BASE_URL+"Profile_image_upload");
     var request = http.MultipartRequest('POST',uri);
+    request.fields['u_id'] = u_id;
     var pic = await http.MultipartFile.fromPath("image", _image.path);
     request.files.add(pic);
     var response = await request.send();
-
     if (response.statusCode == 200) {
       print('Image Uploded');
     }else{
       print('Image Not Uploded');
     }
-    setState(() {
-
-    });
   }
 
   @override

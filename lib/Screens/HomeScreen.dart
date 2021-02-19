@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/Movies.dart';
+import 'package:konda_app/Screens/MyList.dart';
+import 'package:konda_app/Widgets/Video.dart';
 import 'package:konda_app/constants.dart';
 import 'dart:convert';
 import 'package:konda_app/Service/ApiService.dart';
@@ -12,6 +15,27 @@ import 'package:konda_app/Screens/Details.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 
 import 'package:konda_app/Screens/Profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+String u_id = '';
+
+videoDetail(String f_id,String f_title,String f_year,String f_starring,String f_descr,String f_age,String f_rating,String f_director,String f_genre,String f_poster,String f_run,String f_season) async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  preferences.setString("f_id", f_id);
+  preferences.setString("f_title", f_title);
+  preferences.setString("f_year", f_year);
+  preferences.setString("f_descr", f_descr);
+  preferences.setString("f_starring", f_starring);
+  preferences.setString("f_age", f_age);
+  preferences.setString("f_rating", f_rating);
+  preferences.setString("f_director", f_director);
+  preferences.setString("f_genre", f_genre);
+  preferences.setString("f_poster", f_poster);
+  preferences.setString("f_run", f_run);
+  preferences.setString("f_season", f_season);
+  // print("Seasion: "+f_season);
+}
 
 void main() {
   runApp(MyApp());
@@ -30,7 +54,6 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
             home: HomeScreen(),
-
           );
         },
       ),
@@ -44,38 +67,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   /*<-------------Center Body-------------->*/
 
   Future<List> getMovie() async {
     final response = await http.get(ApiService.BASE_URL + "Movie_List");
     return json.decode(response.body);
   }
+
   Future<List> popularMovie() async {
     final response = await http.get(ApiService.BASE_URL + "Popular_Movie_List");
     return json.decode(response.body);
   }
+
   Future<List> getSlider() async {
     final response = await http.get(ApiService.BASE_URL + "Slider_List");
     return json.decode(response.body);
   }
 
-  Future<List> getAnimated() async {
-    final response = await http.get(ApiService.BASE_URL + "Animated_List");
+  Future<List> getCategory() async {
+    final response = await http.get(ApiService.BASE_URL + "Category_list");
     return json.decode(response.body);
   }
 
 
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      u_id = preferences.getString("id");
+    });
+  }
 
-  int currentIndex = 0;
-  String selectedIndex = 'TAB: 0';
-
-  String email = "", name = "", id = "";
-  TabController tabController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPref();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: CustomScrollView(
@@ -86,7 +116,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 constraints: BoxConstraints.expand(height: 225),
-                child: imageSlider(context)),
+                child: FutureBuilder<List>(
+                  future: getMovie(),
+
+                  // ignore: missing_return
+                  builder: (ctx, ss) {
+                    if (ss.hasError) {
+                      print('error');
+                    }
+                    if (ss.hasData) {
+                      return ImageSlider(list: ss.data);
+                    } else {
+                      return Center(
+                        child: const CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+            ),
           ),
 
           /*<----------------Come Enjoy With Us------------->*/
@@ -183,43 +230,24 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 284.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                     right: 230.0),
-                    child: Text('Animation',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 200,
-                      child: FutureBuilder<List>(
-                        future: getAnimated(),
 
-                        // ignore: missing_return
-                        builder: (ctx, ss) {
-                          print("Aya");
-                          if (ss.hasError) {
-                            print(ss.error);
-                          }
-                          if (ss.hasData) {
-                            return AnimatedItem(list: ss.data);
-                          } else {
-                            return Center(
-                              child: const CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                ],
+              child: FutureBuilder<List>(
+                future: getCategory(),
+
+                // ignore: missing_return
+                builder: (ctx, ss) {
+                  print("Aya");
+                  if (ss.hasError) {
+                    print(ss.error);
+                  }
+                  if (ss.hasData) {
+                    return Categories(list: ss.data);
+                  } else {
+                    return Center(
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -229,30 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  /*<--------Slider-------------->*/
-
-  Swiper imageSlider(context) {
-    return  new Swiper(
-        autoplay: true,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
-            },
-            child: new Image.network(
-              "https://konda.co.in/userAssets/img/covers/cover3.jpg",
-                height: 124.0, width: 100.0, fit: BoxFit.cover,
-            ),
-          );
-
-        },
-        itemCount: 10,
-        viewportFraction: 0.7,
-        scale: 0.8,
-      );
-
-  }
-
   //  Action on Bottom Bar Press
   void reds(selectedIndex) {
 //    print(selectedIndex);
@@ -260,20 +264,23 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (selectedIndex) {
       case "TAB: 0":
         {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
         }
 
         break;
 
       case "TAB: 1":
         {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Movies()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Movies()));
         }
         break;
 
       case "TAB: 2":
         {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()));
         }
         break;
     }
@@ -281,114 +288,139 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 
-/*<-------------Cards----------->*/
+/*<--------Slider-------------->*/
+
+class ImageSlider extends StatelessWidget {
+
+  List list;
+
+  ImageSlider({this.list});
 
 
-class Items extends StatelessWidget {
-
-  Future<List> getData() async {
-    final response = await http.get(ApiService.BASE_URL+"Movie_List");
+  Future<List> getAnimated(list) async {
+    final response = await http
+        .post(ApiService.BASE_URL+"Animated_List", body: {
+      "c_id": list
+    });
     return json.decode(response.body);
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Swiper(
+      autoplay: true,
+      layout: SwiperLayout.CUSTOM,
+      customLayoutOption: new CustomLayoutOption(
+          startIndex: -1,
+          stateCount: 3
+      ).addRotate([
+        -45.0/180,
+        0.0,
+        45.0/180
+      ]).addTranslate([
+        new Offset(-340.0, -40.0),
+        new Offset(0.0, 0.0),
+        new Offset(340.0, -40.0)
+      ]),
+      itemWidth: 300.0,
+      itemHeight: 200.0,
+      itemCount: list == null ? 0 : list.length,
+      itemBuilder: (ctx, i) {
+        return GestureDetector(
+          onTap: () {
+
+            videoDetail(list[i]['v_id'],list[i]['v_title'],list[i]['year'],
+                list[i]['v_starring'],list[i]['v_description'],list[i]['v_age'],
+                list[i]['v_rating'],list[i]['v_director'],list[i]['v_genre'],
+                list[i]['v_poster'],list[i]['v_run'],list[i]['v_season']);
+
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Details()));
+          },
+          child: new Image.network(
+            ApiService.BASE_URL+list[i]['v_poster'],
+            height: 124.0,
+            width: 100.0,
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+    );
+
+  }
+}
+
+/*<-------------Cards----------->*/
+
+class Categories extends StatelessWidget {
+
+  List list;
+
+  Categories({this.list});
+
+
+  Future<List> getAnimated(list) async {
+    final response = await http
+        .post(ApiService.BASE_URL+"Animated_List", body: {
+      "c_id": list
+    });
+    return json.decode(response.body);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: list == null ? 0 : list.length,
+      itemBuilder: (ctx, i) {
+        return Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 230.0),
+              child: Text(list[i]['c_title'],
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0)),
+
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 20.0),
+                height: 200,
+                child: FutureBuilder<List>(
+                  future: getAnimated(list[i]['c_id']),
+
+                  // ignore: missing_return
+                  builder: (ctx, ss) {
+                    print("Aya");
+                    if (ss.hasError) {
+                      print(ss.error);
+                    }
+                    if (ss.hasData) {
+                      return Items(list: ss.data);
+                    } else {
+                      return Center(
+                        child: const CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+}
+
+class Items extends StatelessWidget {
 
   List list;
 
   Items({this.list});
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: list == null ? 0 : list.length,
-      itemBuilder: (ctx, i) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => Details()));
-                },
-                child: Container(
-                  width: 100,
-                  child: Column(children: [
-                    Image.network(ApiService.BASE_URL + list[i]['v_poster'],
-                        height: 124.0, width: 100.0, fit: BoxFit.cover),
-                    LinearProgressIndicator(value: 50.0),
-                    Row(
-                      children: <Widget>[
-
-                        PopupMenuButton<String>(
-                          icon: Icon(Icons.info_outline_rounded),
-                          onSelected: choiceAction,
-                          itemBuilder: (BuildContext context) {
-                            return Constants.detail.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Row(
-                                  children: [
-                                    Image.network(ApiService.BASE_URL+list[i]['v_poster']),
-                                    Text(list[i]['v_title']),
-                                    Text(list[i]['v_descr']),
-
-                                  ],
-                                )
-
-                              );
-                            }).toList();
-                          },
-                        ),
-                        PopupMenuButton<String>(
-                          icon: Icon(Icons.more_vert_sharp),
-                          onSelected: choiceAction,
-                          itemBuilder: (BuildContext context) {
-                            return Constants.choices.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(choice),
-                              );
-                            }).toList();
-                          },
-                        ),
-
-                      /*  DropdownButton<String>(
-                          icon: IconButton(icon: Icon(Icons.add),),
-                          value: 'Add to list',
-                          onTap: (){
-                            DropdownButton()
-                          },
-                        ),*/
-                        /*IconButton(
-                            onPressed: (){
-                             PopupMenuButton(
-
-                                child:Text('Add To List')
-                              );
-                            },
-                            icon: Icon(
-                              Icons.more_vert_sharp,
-                              size: 22.0,
-                              color: Colors.white,
-                            )),*/
-                      ],
-                    )
-                  ]),
-                )),
-          ),
-        );
-      },
-    );
-  }
-}
-
-
-class AnimatedItem extends StatelessWidget {
-
-
-  List list;
-
-  AnimatedItem({this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -402,8 +434,13 @@ class AnimatedItem extends StatelessWidget {
             child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => Details()));
+                  videoDetail(list[i]['v_id'],list[i]['v_title'],list[i]['year'],
+                      list[i]['v_starring'],list[i]['v_description'],list[i]['v_age'],
+                      list[i]['v_rating'],list[i]['v_director'],list[i]['v_genre'],
+                      list[i]['v_poster'],list[i]['v_run'],list[i]['v_season']);
+
+                  Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Details()));
                 },
                 child: Container(
                   width: 100,
@@ -413,59 +450,87 @@ class AnimatedItem extends StatelessWidget {
                     LinearProgressIndicator(value: 50.0),
                     Row(
                       children: <Widget>[
+                        IconButton(
+                            onPressed: ()=> showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    content:Image.network(ApiService.BASE_URL + list[i]['v_poster'],
+                                        fit: BoxFit.cover),
+                                    actions: [
+                                      Column(
+                                        children: [
+                                          Center(child: new Text("Title: "+list[i]['v_title'])),
+                                        ],
+                                      ),
+                                      Center(child: new Text("Duration: "+list[i]['v_run'])),
+                                      Row(
+                                        children: [
+                                          new FlatButton(
+                                            child: const Text(""),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 25, left: 40, top: 25.0, bottom: 30.0),
+                                            child: Container(
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(15)),
+                                              child: FlatButton.icon(
+                                                  onPressed: () => Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => Videoplayer())),
+                                                  icon: Icon(Icons.play_arrow_outlined,
+                                                      size: 30, color: Colors.black),
+                                                  label: Text('Play',
+                                                      style:
+                                                      TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold))),
+                                            ),
+                                          ),
 
-                        PopupMenuButton<String>(
-                          icon: Icon(Icons.info_outline_rounded),
-                          onSelected: choiceAction,
-                          itemBuilder: (BuildContext context) {
-                            return Constants.detail.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Row(
-                                  children: [
-                                    Image.network(ApiService.BASE_URL+list[i]['v_poster']),
-                                    Text(list[i]['v_title']),
-                                    Text(list[i]['v_descr']),
-
+                                        ],
+                                      ),
                                   ],
-                                )
+                                );
+                              },
+                            ),
 
-                              );
-                            }).toList();
-                          },
+                            icon: Icon(
+                              Icons.info_outline_rounded,
+                              size: 22.0,
+                              color: Colors.white,
+                            )
                         ),
-                        PopupMenuButton<String>(
-                          icon: Icon(Icons.more_vert_sharp),
-                          onSelected: choiceAction,
-                          itemBuilder: (BuildContext context) {
-                            return Constants.choices.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(choice),
-                              );
-                            }).toList();
-                          },
-                        ),
+                        IconButton(
+                            onPressed: ()=> showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    actions: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right:100.0),
+                                      child: new FlatButton(
+                                        child: const Text('+ Add To Play List'),
+                                        onPressed: () {
+                                          addToPlayList(list[i]['v_id'],list[i]['v_title']);
 
-                      /*  DropdownButton<String>(
-                          icon: IconButton(icon: Icon(Icons.add),),
-                          value: 'Add to list',
-                          onTap: (){
-                            DropdownButton()
-                          },
-                        ),*/
-                        /*IconButton(
-                            onPressed: (){
-                             PopupMenuButton(
-
-                                child:Text('Add To List')
-                              );
-                            },
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                             icon: Icon(
                               Icons.more_vert_sharp,
                               size: 22.0,
                               color: Colors.white,
-                            )),*/
+                            )),
                       ],
                     )
                   ]),
@@ -475,38 +540,35 @@ class AnimatedItem extends StatelessWidget {
       },
     );
   }
+
 }
 
+addToPlayList(list, list2) async {
+    final response = await http
+        .post(ApiService.BASE_URL+"Add_PlayList", body: {
+      "v_id": list,"v_title": list2,"u_id":u_id
+    });
 
-class Constants {
-  static const String FirstItem = 'Add to PlayList';
-  static const String Next= 'Go For Details';
-  /*static const String SecondItem = 'Second Item';
-  static const String ThirdItem = 'Third Item';*/
-
-  static const List<String> choices = <String>[
-    FirstItem,
-    /*SecondItem,
-    ThirdItem,*/
-  ];
-  static const List<String> detail = <String>[
-
-    Next,
-    /*SecondItem,
-    ThirdItem,*/
-  ];
-}
-
-
-void choiceAction(String choice) {
-  if (choice == Constants.FirstItem) {
-    print('I First Item');
-    if(choice == Constants.Next){
-      print('Next Item');
+    final data = jsonDecode(response.body);
+    bool value = data['error'];
+    String success = data['success'];
+    if (!value) {
+      print("Success: "+success);
+      addedSuccessToast(success);
+    }else {
+      addedSuccessToast(success);
     }
- /* } else if (choice == Constants.SecondItem) {
-    print('I Second Item');
-  } else if (choice == Constants.ThirdItem) {
-    print('I Third Item');
-  */}
 }
+
+addedSuccessToast(String toast) {
+  return Fluttertoast.showToast(
+      msg: toast,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white);
+}
+
+
+

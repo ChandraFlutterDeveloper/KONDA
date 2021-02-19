@@ -1,200 +1,3 @@
-/*import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:konda_app/Screens/Details.dart';
-import 'dart:convert';
-
-import 'package:konda_app/Service/ApiService.dart';
-import 'package:konda_app/constants.dart';
-
-class Search extends StatefulWidget {
-  @override
-  _SearchState createState() => _SearchState();
-}
-
-class _SearchState extends State<Search> {
-  Future<List> getData() async {
-    final response = await http.get(ApiService.BASE_URL+"Search_List");
-    return json.decode(response.body);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
-      backgroundColor: DarkSecondaryColor,
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: buildTextField('Search for movies, shows, genre, etc.'),
-      ),
-      body: FutureBuilder<List>(
-              future: getData(),
-              builder: (ctx, ss) {
-                if (ss.hasError) {
-                  print('error');
-                }
-                if (ss.hasData) {
-                  return SearchItem(list: ss.data);
-                } else {
-                  return Center(
-                    child: const CircularProgressIndicator(),
-                  );
-                }
-              },
-              // ignore: missing_return
-
-            ),
-    );
-  }
-}
-
-Widget buildTextField(String hintText) {
-  return TextField(
-    decoration: InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(
-        color: Colors.grey,
-        fontSize: 16.0,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      prefixIcon: hintText == 'Search for movies, shows, genre, etc.'
-          ? Icon(Icons.search)
-          : Icon(Icons.youtube_searched_for_rounded),
-
-    ),
-  );
-}
-
-class SearchItem extends StatelessWidget {
-  List list;
-  SearchItem({this.list});
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: list == null ? 0 : list.length,
-        shrinkWrap: true,
-        itemBuilder: (ctx, i) {
-          return Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(list[i]['v_title'], style: TextStyle(fontSize: 20,color: Colors.blue),),
-                    Text(list[i]['v_descr'], style: TextStyle(fontSize: 15),),
-                  ],
-                ),
-              );
-
-        });
-  }
-}
-
-
-
-class TabsScreen extends StatefulWidget {
-  @override
-  _TabsScreenState createState() => _TabsScreenState();
-}
-
-class _TabsScreenState extends State<TabsScreen> {
-  List<Widget> _pages = [];
-  var _isInit = true;
-  var _isLoading = false;
-
-  int _selectedPageIndex = 0;
-  bool _isSearching = false;
-  final searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    // Provider.of<Auth>(context).tryAutoLogin().then((_) {});
-  }
-
-
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  void _handleSubmitted(String value) {
-    final searchText = searchController.text;
-    if (searchText.isEmpty) {
-      return;
-    }
-
-    searchController.clear();
-    Navigator.of(context).pushNamed(
-      ApiService.BASE_URL+"Search_List",
-      arguments: {
-        'category_id': null,
-        'seacrh_query': searchText,
-        'type': ApiService.BASE_URL+"Search_List",
-      },
-    );
-    // print(searchText);
-  }
-
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: !_isSearching
-            ? Image.asset(
-          'assets/images/logo.png',
-          fit: BoxFit.contain,
-          height: 32,
-        )
-            : TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Search Here',
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-          ),
-          controller: searchController,
-          onFieldSubmitted: _handleSubmitted,
-        ),
-
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isSearching = !_isSearching;
-                });
-              }),
-        ],
-      ),
-
-
-    );
-  }
-}*/
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -202,7 +5,9 @@ import 'package:konda_app/Screens/Details.dart';
 import 'dart:convert';
 
 import 'package:konda_app/Service/ApiService.dart';
+import 'package:konda_app/Widgets/Video.dart';
 import 'package:konda_app/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -242,23 +47,6 @@ class _SearchState extends State<Search> {
     return jsonDecode(response.body);
   }
 
- /* Future<void> Movies(String searchQuery) async {
-    var url =await ApiService.BASE_URL+"SearchMovies" + '/$searchQuery';
-    print(url);
-    try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as List;
-      if (extractedData == null) {
-        return;
-      }
-      // print(extractedData);
-
-
-    } catch (error) {
-      throw (error);
-    }
-  }*/
-
   int _selectedPageIndex = 0;
   bool _isSearching = false;
   final searchController = TextEditingController();
@@ -273,43 +61,53 @@ class _SearchState extends State<Search> {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+
         backgroundColor: Colors.transparent,
         title: !_isSearching
-            ? Image.asset(
-          'assets/images/logos.png',
-          fit: BoxFit.contain,
-          height: 32,
-        )
+            ? Column(
+              children: [
+                Image.asset(
+                    'assets/images/logos.png',
+                    fit: BoxFit.contain,
+                    height: 32,
+                  ),
+              ],
+            )
             : TextFormField(
               onChanged: (value) {
                 usrSearch = value;
 
               },
-          decoration: InputDecoration(
-            labelText: 'Search Here',
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-          ),
-
-
-          controller: searchController,
-          // onFieldSubmitted: _handleSubmitted,
-        ),
-
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.grey,
+              decoration: InputDecoration(
+                labelText: 'Search Here',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
               ),
-              onPressed: () {
-                setState(() {
-                  _isSearching = !_isSearching;
-                });
-              }),
-        ],
+
+
+              controller: searchController,
+              // onFieldSubmitted: _handleSubmitted,
+            ),
+
+            actions: !_isSearching ? <Widget>[
+              IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isSearching = !_isSearching;
+                    });
+                  }),
+            ]: <Widget>[
+
+            ]
       ),
 
 
@@ -336,41 +134,96 @@ class _SearchState extends State<Search> {
   }
 }
 
-/*Widget buildTextField(String hintText) {
-  return TextField(
-    decoration: InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(
-        color: Colors.grey,
-        fontSize: 16.0,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      prefixIcon: hintText == 'Search for movies, shows, genre, etc.'
-          ? Icon(Icons.search)
-          : Icon(Icons.youtube_searched_for_rounded),
-
-    ),
-  );
-}*/
 
 class Items extends StatelessWidget {
+
   List list;
+  videoDetail(String f_id,String f_title,String f_year,String f_starring,String f_descr,String f_age,String f_rating,String f_director,String f_genre,String f_poster,String f_run,String f_season) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("f_id", f_id);
+    preferences.setString("f_title", f_title);
+    preferences.setString("f_year", f_year);
+    preferences.setString("f_descr", f_descr);
+    preferences.setString("f_starring", f_starring);
+    preferences.setString("f_age", f_age);
+    preferences.setString("f_rating", f_rating);
+    preferences.setString("f_director", f_director);
+    preferences.setString("f_genre", f_genre);
+    preferences.setString("f_poster", f_poster);
+    preferences.setString("f_run", f_run);
+    preferences.setString("f_season", f_season);
+    // print("Seasion: "+f_season);
+  }
+
   Items({this.list});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: list == null ? 0 : list.length,
-        itemBuilder: (ctx, i) {
+        itemCount: list==null?0:list.length,
+        itemBuilder: (ctx,i){
           return ListTile(
-              leading: Image.network(ApiService.BASE_URL+list[i]['v_poster']),
-              title: Text(list[i]['v_title']),
-              subtitle: Text(list[i]['year']),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Details()));
-              });
-        });
+            leading: GestureDetector(
+                onTap: ()=> showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content:Image.network(ApiService.BASE_URL + list[i]['v_poster'],
+                          fit: BoxFit.cover),
+                      actions: [
+                        Column(
+                          children: [
+                            Center(child: new Text("Title: "+list[i]['v_title'])),
+                          ],
+                        ),
+                        Center(child: new Text("Duration: "+list[i]['v_run'])),
+                        Row(
+                          children: [
+                            new FlatButton(
+                              child: const Text(""),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 25, left: 40, top: 25.0, bottom: 30.0),
+                              child: Container(
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: FlatButton.icon(
+                                    onPressed: () => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Videoplayer())),
+                                    icon: Icon(Icons.play_arrow_outlined,
+                                        size: 30, color: Colors.black),
+                                    label: Text('Play',
+                                        style:
+                                        TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold))),
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                child: Image.network(ApiService.BASE_URL+list[i]['v_poster'])),
+            title: Text(list[i]['v_title']),
+            subtitle: Text(list[i]['year']),
+            onTap:  () {
+              videoDetail(list[i]['v_id'],list[i]['v_title'],list[i]['year'],
+                  list[i]['v_starring'],list[i]['v_description'],list[i]['v_age'],
+                  list[i]['v_rating'],list[i]['v_director'],list[i]['v_genre'],
+                  list[i]['v_poster'],list[i]['v_run'],list[i]['v_season']);
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Details()));
+            },
+          );
+        }
+    );
   }
 }

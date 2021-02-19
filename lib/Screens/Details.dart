@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,6 +11,9 @@ import 'package:konda_app/Widgets/Video.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String uid = '';
 
 void main() {
   runApp(MyApp());
@@ -40,9 +45,57 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  Future<List> getData() async {
-    final response = await http.get(ApiService.BASE_URL + "Movie_List");
-    return json.decode(response.body);
+
+
+  String id, title, genre, director, year, rating, descr, staring, poster, age, duration, season;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      uid = preferences.getString("id");
+      id = preferences.getString("f_id");
+      title = preferences.getString("f_title");
+      genre = preferences.getString("f_genre");
+      director = preferences.getString("f_director");
+      year = preferences.getString("f_year");
+      rating = preferences.getString("f_rating");
+      descr = preferences.getString("f_descr");
+      staring = preferences.getString("f_starring");
+      poster = preferences.getString("f_poster");
+      age = preferences.getString("f_age");
+      season = preferences.getString("f_season");
+      duration = preferences.getString("f_run");
+/*      return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            // Retrieve the text the user has entered by using the
+            // TextEditingController.
+            content: Text(preferences.getString("f_id") +
+                " " +
+                preferences.getString("f_title") +
+                " " +
+                preferences.getString("f_year") +
+                " " +
+                preferences.getString("f_descr") +
+                " " +
+                preferences.getString("f_starring") +
+                " " +
+                preferences.getString("f_rating") +
+                " " +
+                preferences.getString("f_director") +
+                " " +
+                preferences.getString("f_genre")),
+          );
+        },
+      );*/
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPref();
   }
 
   @override
@@ -60,38 +113,60 @@ class _DetailsState extends State<Details> {
                   height: 250,
                   width: 150,
                   child: Image.network(
-                      'https://konda.co.in/userAssets/img/covers/cover.jpg'),
+                      ApiService.BASE_URL+poster),
                 ),
 
                 /*<-----------Mid Row----------->*/
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('I Dream...',
-                        style: TextStyle(color: Colors.white, fontSize: 15)),
-                    Text('2020',
-                        style: TextStyle(color: Colors.white, fontSize: 15)),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('1 Year',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15)),
-                        )),
-                    Text('Winter',
-                        style: TextStyle(color: Colors.white, fontSize: 15)),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left:28.0,top: 8),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(title,textAlign:TextAlign.start ,
+                        style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:28.0,top: 8,bottom: 15),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Dutation: "+duration,textAlign:TextAlign.start ,
+                        style: TextStyle(color: Colors.white,fontSize: 18)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(year,
+                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(age,
+                                  style:
+                                  TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
+                            )),
+                        Text(season,
+                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
+                        Text(" | "+genre,
+                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
                 ),
 
                 /*<-----------Play Button----------->*/
 
                 Padding(
-                  padding: const EdgeInsets.only(right: 25, left: 25, top: 8.0),
+                  padding: const EdgeInsets.only(right: 25, left: 25, top: 25.0),
                   child: Container(
                     height: 35,
                     width: 400,
@@ -107,7 +182,7 @@ class _DetailsState extends State<Details> {
                             size: 30, color: Colors.black),
                         label: Text('Play',
                             style:
-                                TextStyle(color: Colors.black, fontSize: 16))),
+                                TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold))),
                   ),
                 ),
 
@@ -115,78 +190,61 @@ class _DetailsState extends State<Details> {
 
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 20, left: 30, right: 20, bottom: 20),
+                      top: 40, left: 30, right: 20, bottom: 20),
                   child: Container(
                       height: 50,
-                      child: Text(
-                          'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy.',
-                          style: TextStyle(color: Colors.white))),
+                      child: Text(descr,textAlign:TextAlign.center,style: TextStyle(color: Colors.white))),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                       height: 50,
-                      child: Text('Starring ',
-                          style: TextStyle(color: Colors.white))),
+                      child: Text(staring,
+                          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold))),
                 ),
 
                 /*<-----------Last Row----------->*/
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    MaterialButton(
-                      onPressed: null,
-                      child: Column(
-                        children: <Widget>[
-                          Icon(Icons.add, color: Colors.white),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'My List',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+                          addToPlayList(id, title);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.add, color: Colors.white),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Add to List',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: null,
-                      child: Column(
-                        children: <Widget>[
-                          Icon(Icons.thumb_up_alt_outlined,
-                              color: Colors.white),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Rate',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
+                      MaterialButton(
+                        onPressed: null,
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.thumb_up_alt_outlined,
+                                color: Colors.white),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                rating,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: null,
-                      child: Column(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.share, color: Colors.white),
-                            onPressed: () {
-                              share();
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Share',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Divider(
                   color: Colors.grey.shade500,
@@ -199,7 +257,7 @@ class _DetailsState extends State<Details> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                      'https://konda.co.in/userAssets/img/covers/cover2.jpg',
+                      ApiService.BASE_URL+poster,
                     ),
                     fit: BoxFit.cover,
                     colorFilter:
@@ -217,6 +275,37 @@ class _DetailsState extends State<Details> {
     ]));
   }
 }
+
+addToPlayList(list, list2) async {
+  final response = await http
+      .post(ApiService.BASE_URL+"Add_PlayList", body: {
+    "v_id": list,"v_title": list2,"u_id":uid
+  });
+
+  final data = jsonDecode(response.body);
+  bool value = data['error'];
+  String success = data['success'];
+  if (!value) {
+    print("Success: "+success);
+    addedSuccessToast(success);
+  }else {
+    addedSuccessToast(success);
+  }
+}
+
+addedSuccessToast(String toast) {
+  return Fluttertoast.showToast(
+      msg: toast,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white);
+}
+
+
+
+
 
 Future<void> share() async {
   await FlutterShare.share(
