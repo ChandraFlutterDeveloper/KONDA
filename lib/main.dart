@@ -9,6 +9,18 @@ import 'package:konda_app/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Container(
+      color: Colors.transparent,
+      child: Text(
+        details.toString(),
+        style: TextStyle(
+          fontSize: 15.0,
+          color: Colors.transparent,
+        ),
+      ),
+    );
+  };
   runApp(MyApp());
 }
 

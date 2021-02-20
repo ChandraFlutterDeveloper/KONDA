@@ -131,12 +131,18 @@ class _MainMenuState extends State<MainMenu> {
     });
   }
 
+  savePref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setBool('clickFun',false);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getPref();
-
     _pageController = PageController();
   }
 
@@ -373,6 +379,7 @@ class _MainMenuState extends State<MainMenu> {
             showElevation: true,
             // use this to remove appBar's elevation
             onItemSelected: (index) => setState(() {
+              savePref();
               _currentIndex = index;
               _pageController.animateToPage(index,
                   duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -398,31 +405,6 @@ class _MainMenuState extends State<MainMenu> {
             ],
           ),
         ));
-  }
-
-  //  Action on Bottom Bar Press
-  void reds(selectedIndex) {
-//    print(selectedIndex);
-
-    switch (selectedIndex) {
-      case 0:
-        {
-          callToast("Tab 0");
-        }
-        break;
-
-      case 1:
-        {
-          callToast("Tab 1");
-        }
-        break;
-
-      case 2:
-        {
-          callToast("Tab 2");
-        }
-        break;
-    }
   }
 
   callToast(String msg) {

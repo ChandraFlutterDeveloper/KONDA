@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/Screens/login_page.dart';
+import 'package:konda_app/Screens/registration.dart';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/constants.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -15,7 +16,9 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+    runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -96,6 +99,12 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  savePref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setBool('clickFun',true);
+    });
+  }
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -232,6 +241,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.grey,
                   ),
                   onTap: () {
+                    savePref();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => MyList(),
                     ));
@@ -248,6 +258,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.grey,
                   ),
                   onTap: () {
+                    savePref();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => Movies(),
                     ));
@@ -264,6 +275,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.grey,
                   ),
                   onTap: () {
+                    savePref();
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },

@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:konda_app/Screens/Movies.dart';
-import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/Widgets/Video.dart';
 import 'package:konda_app/constants.dart';
 import 'dart:convert';
@@ -107,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).backgroundColor,
       body: CustomScrollView(
         slivers: <Widget>[
@@ -339,8 +339,6 @@ class ImageSlider extends StatelessWidget {
           },
           child: new Image.network(
             ApiService.BASE_URL+list[i]['v_poster'],
-            height: 124.0,
-            width: 100.0,
             fit: BoxFit.cover,
           ),
         );

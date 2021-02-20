@@ -21,11 +21,15 @@ class _MoviesState extends State<Movies> {
     return json.decode(response.body);
   }
 
+  bool click;
+
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       u_id = preferences.getString("id");
+      click = preferences.getBool('clickFun');
     });
+
   }
 
   @override
@@ -39,6 +43,21 @@ class _MoviesState extends State<Movies> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+      appBar: click ? AppBar(
+        title:
+        Text(
+          'Movies',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.grey,
+            )),
+      ) : PreferredSize(preferredSize: Size(0.0, 0.0),child: Container(),),
       body: FutureBuilder<List>(
         future: getData(),
         // ignore: missing_return
@@ -60,8 +79,19 @@ class _MoviesState extends State<Movies> {
 }
 
 class Items extends StatelessWidget {
-
-  videoDetail(String f_id,String f_title,String f_year,String f_starring,String f_descr,String f_age,String f_rating,String f_director,String f_genre,String f_poster,String f_run,String f_season) async {
+  videoDetail(
+      String f_id,
+      String f_title,
+      String f_year,
+      String f_starring,
+      String f_descr,
+      String f_age,
+      String f_rating,
+      String f_director,
+      String f_genre,
+      String f_poster,
+      String f_run,
+      String f_season) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("f_id", f_id);
     preferences.setString("f_title", f_title);
@@ -77,25 +107,21 @@ class Items extends StatelessWidget {
     preferences.setString("f_season", f_season);
     // print("Seasion: "+f_season);
   }
+
   List list;
 
   Items({this.list});
-
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return GridView.builder(
-        shrinkWrap: true,
-        itemCount: list.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            childAspectRatio: width / (height * 0.9)
-        ),
-        itemBuilder:  (ctx, i) {
+      shrinkWrap: true,
+      itemCount: list.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3, childAspectRatio: width / (height * 0.77)),
+      itemBuilder: (ctx, i) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
@@ -114,8 +140,8 @@ class Items extends StatelessWidget {
                   list[i]['v_run'],
                   list[i]['v_season']);
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Details()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Details()));
             },
             child: Card(
               child: Column(children: [
@@ -130,8 +156,7 @@ class Items extends StatelessWidget {
                               builder: (context) {
                                 return AlertDialog(
                                   content: Image.network(
-                                      ApiService.BASE_URL +
-                                          list[i]['v_poster'],
+                                      ApiService.BASE_URL + list[i]['v_poster'],
                                       fit: BoxFit.cover),
                                   actions: [
                                     Column(
@@ -142,8 +167,8 @@ class Items extends StatelessWidget {
                                       ],
                                     ),
                                     Center(
-                                        child: new Text("Duration: " +
-                                            list[i]['v_run'])),
+                                        child: new Text(
+                                            "Duration: " + list[i]['v_run'])),
                                     Row(
                                       children: [
                                         new FlatButton(
@@ -155,7 +180,7 @@ class Items extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               right: 25,
-                                              left: 40,
+                                              left: 20,
                                               top: 25.0,
                                               bottom: 30.0),
                                           child: Container(
@@ -163,19 +188,16 @@ class Items extends StatelessWidget {
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        15)),
+                                                    BorderRadius.circular(15)),
                                             child: FlatButton.icon(
-                                                onPressed: () => Navigator
-                                                    .pushReplacement(
+                                                onPressed: () =>
+                                                    Navigator.pushReplacement(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Videoplayer())),
+                                                            builder: (context) =>
+                                                                Videoplayer())),
                                                 icon: Icon(
-                                                    Icons
-                                                        .play_arrow_outlined,
+                                                    Icons.play_arrow_outlined,
                                                     size: 30,
                                                     color: Colors.black),
                                                 label: Text('Play',
@@ -183,8 +205,7 @@ class Items extends StatelessWidget {
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight
-                                                                .bold))),
+                                                            FontWeight.bold))),
                                           ),
                                         ),
                                       ],
@@ -205,11 +226,10 @@ class Items extends StatelessWidget {
                                 return AlertDialog(
                                   actions: [
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 100.0),
+                                      padding:
+                                          const EdgeInsets.only(right: 100.0),
                                       child: new FlatButton(
-                                        child: const Text(
-                                            '+ Add To Play List'),
+                                        child: const Text('+ Add To Play List'),
                                         onPressed: () {
                                           addToPlayList(list[i]['v_id'],
                                               list[i]['v_title']);
@@ -236,22 +256,19 @@ class Items extends StatelessWidget {
       },
     );
   }
-
 }
 
 addToPlayList(list, list2) async {
-  final response = await http
-      .post(ApiService.BASE_URL+"Add_PlayList", body: {
-    "v_id": list,"v_title": list2,"u_id":u_id
-  });
+  final response = await http.post(ApiService.BASE_URL + "Add_PlayList",
+      body: {"v_id": list, "v_title": list2, "u_id": u_id});
 
   final data = jsonDecode(response.body);
   bool value = data['error'];
   String success = data['success'];
   if (!value) {
-    print("Success: "+success);
+    print("Success: " + success);
     addedSuccessToast(success);
-  }else {
+  } else {
     addedSuccessToast(success);
   }
 }
@@ -265,6 +282,3 @@ addedSuccessToast(String toast) {
       backgroundColor: Colors.green,
       textColor: Colors.white);
 }
-
-
-

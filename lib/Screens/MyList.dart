@@ -8,8 +8,10 @@ import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/Widgets/Video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MaterialApp());
+void main() async {
 
+  runApp(MyList());
+}
 class MyList extends StatefulWidget {
   @override
   _MyListState createState() => _MyListState();
@@ -17,13 +19,16 @@ class MyList extends StatefulWidget {
 
 class _MyListState extends State<MyList> {
 
-  String u_id = '';
+  String u_id;
+  bool click;
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       u_id = preferences.getString("id");
+      click = preferences.getBool('clickFun');
     });
+
   }
 
   @override
@@ -38,14 +43,31 @@ class _MyListState extends State<MyList> {
         .post(ApiService.BASE_URL+"My_PlayList", body: {
       "u_id":u_id
     });
+
     return json.decode(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: FutureBuilder<List>(
+     return Scaffold(
+         resizeToAvoidBottomPadding: false,
+        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: click ? AppBar(
+          title:
+            Text(
+              'My Play List',
+              style: TextStyle(color: Colors.white),
+            ),
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.grey,
+              )),
+        ) : PreferredSize(preferredSize: Size(0.0, 0.0),child: Container(),),
+        body: FutureBuilder<List>(
         future: getData(),
         // ignore: missing_return
         builder: (ctx,ss) {
