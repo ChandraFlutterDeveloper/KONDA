@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -10,16 +12,25 @@ import 'package:konda_app/constants.dart';
 import 'dart:convert';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/Screens/Details.dart';
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-
 import 'package:konda_app/Screens/Profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 String u_id = '';
 
-videoDetail(String f_id,String f_title,String f_year,String f_starring,String f_descr,String f_age,String f_rating,String f_director,String f_genre,String f_poster,String f_run,String f_season) async {
+videoDetail(
+    String f_id,
+    String f_title,
+    String f_year,
+    String f_starring,
+    String f_descr,
+    String f_age,
+    String f_rating,
+    String f_director,
+    String f_genre,
+    String f_poster,
+    String f_run,
+    String f_season) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   preferences.setString("f_id", f_id);
   preferences.setString("f_title", f_title);
@@ -88,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return json.decode(response.body);
   }
 
-
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -112,33 +122,33 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(5),
-                alignment: Alignment.center,
-                constraints: BoxConstraints.expand(height: 225),
-                child: FutureBuilder<List>(
-                  future: getMovie(),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(5),
+              alignment: Alignment.center,
+              constraints: BoxConstraints.expand(height: 225),
+              child: FutureBuilder<List>(
+                future: getMovie(),
 
-                  // ignore: missing_return
-                  builder: (ctx, ss) {
-                    if (ss.hasError) {
-                      print('error');
-                    }
-                    if (ss.hasData) {
-                      return ImageSlider(list: ss.data);
-                    } else {
-                      return Center(
-                        child: const CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                ),
+                // ignore: missing_return
+                builder: (ctx, ss) {
+                  if (ss.hasError) {
+                    print('error');
+                  }
+                  if (ss.hasData) {
+                    return ImageSlider(list: ss.data);
+                  } else {
+                    return Center(
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
             ),
           ),
 
           /*<----------------Come Enjoy With Us------------->*/
 
-          SliverToBoxAdapter(
+    /*      SliverToBoxAdapter(
             child: SizedBox(
               height: 284.0,
               child: Column(
@@ -181,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          /*<------------Popular SHows------------->*/
+          *//*<------------Popular SHows------------->*//*
 
           SliverToBoxAdapter(
             child: SizedBox(
@@ -223,14 +233,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-          ),
+          ),*/
 
           /*<----------------Animated------------->*/
 
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 284.0,
-
+              height: 313.0,
               child: FutureBuilder<List>(
                 future: getCategory(),
 
@@ -255,7 +264,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   //  Action on Bottom Bar Press
   void reds(selectedIndex) {
@@ -287,21 +295,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
 /*<--------Slider-------------->*/
 
 class ImageSlider extends StatelessWidget {
-
   List list;
 
   ImageSlider({this.list});
 
-
   Future<List> getAnimated(list) async {
     final response = await http
-        .post(ApiService.BASE_URL+"Animated_List", body: {
-      "c_id": list
-    });
+        .post(ApiService.BASE_URL + "Animated_List", body: {"c_id": list});
     return json.decode(response.body);
   }
 
@@ -310,14 +313,8 @@ class ImageSlider extends StatelessWidget {
     return new Swiper(
       autoplay: true,
       layout: SwiperLayout.CUSTOM,
-      customLayoutOption: new CustomLayoutOption(
-          startIndex: -1,
-          stateCount: 3
-      ).addRotate([
-        -45.0/180,
-        0.0,
-        45.0/180
-      ]).addTranslate([
+      customLayoutOption: new CustomLayoutOption(startIndex: -1, stateCount: 3)
+          .addRotate([-45.0 / 180, 0.0, 45.0 / 180]).addTranslate([
         new Offset(-340.0, -40.0),
         new Offset(0.0, 0.0),
         new Offset(340.0, -40.0)
@@ -328,40 +325,43 @@ class ImageSlider extends StatelessWidget {
       itemBuilder: (ctx, i) {
         return GestureDetector(
           onTap: () {
-
-            videoDetail(list[i]['v_id'],list[i]['v_title'],list[i]['year'],
-                list[i]['v_starring'],list[i]['v_description'],list[i]['v_age'],
-                list[i]['v_rating'],list[i]['v_director'],list[i]['v_genre'],
-                list[i]['v_poster'],list[i]['v_run'],list[i]['v_season']);
+            videoDetail(
+                list[i]['v_id'],
+                list[i]['v_title'],
+                list[i]['year'],
+                list[i]['v_starring'],
+                list[i]['v_description'],
+                list[i]['v_age'],
+                list[i]['v_rating'],
+                list[i]['v_director'],
+                list[i]['v_genre'],
+                list[i]['v_poster'],
+                list[i]['v_run'],
+                list[i]['v_season']);
 
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Details()));
           },
           child: new Image.network(
-            ApiService.BASE_URL+list[i]['v_poster'],
+            ApiService.BASE_URL + list[i]['v_poster'],
             fit: BoxFit.cover,
           ),
         );
       },
     );
-
   }
 }
 
 /*<-------------Cards----------->*/
 
 class Categories extends StatelessWidget {
-
   List list;
 
   Categories({this.list});
 
-
   Future<List> getAnimated(list) async {
     final response = await http
-        .post(ApiService.BASE_URL+"Animated_List", body: {
-      "c_id": list
-    });
+        .post(ApiService.BASE_URL + "Animated_List", body: {"c_id": list});
     return json.decode(response.body);
   }
 
@@ -373,18 +373,19 @@ class Categories extends StatelessWidget {
         return Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(right: 230.0),
-              child: Text(list[i]['c_title'],
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0)),
-
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(list[i]['c_title'],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0)),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 20.0),
                 height: 200,
                 child: FutureBuilder<List>(
                   future: getAnimated(list[i]['c_id']),
@@ -414,11 +415,9 @@ class Categories extends StatelessWidget {
 }
 
 class Items extends StatelessWidget {
-
   List list;
 
   Items({this.list});
-
 
   @override
   Widget build(BuildContext context) {
@@ -432,13 +431,22 @@ class Items extends StatelessWidget {
             child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  videoDetail(list[i]['v_id'],list[i]['v_title'],list[i]['year'],
-                      list[i]['v_starring'],list[i]['v_description'],list[i]['v_age'],
-                      list[i]['v_rating'],list[i]['v_director'],list[i]['v_genre'],
-                      list[i]['v_poster'],list[i]['v_run'],list[i]['v_season']);
+                  videoDetail(
+                      list[i]['v_id'],
+                      list[i]['v_title'],
+                      list[i]['year'],
+                      list[i]['v_starring'],
+                      list[i]['v_description'],
+                      list[i]['v_age'],
+                      list[i]['v_rating'],
+                      list[i]['v_director'],
+                      list[i]['v_genre'],
+                      list[i]['v_poster'],
+                      list[i]['v_run'],
+                      list[i]['v_season']);
 
                   Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Details()));
+                      MaterialPageRoute(builder: (context) => Details()));
                 },
                 child: Container(
                   width: 100,
@@ -449,81 +457,103 @@ class Items extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         IconButton(
-                            onPressed: ()=> showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                    content:Image.network(ApiService.BASE_URL + list[i]['v_poster'],
-                                        fit: BoxFit.cover),
-                                    actions: [
-                                      Column(
-                                        children: [
-                                          Center(child: new Text("Title: "+list[i]['v_title'])),
-                                        ],
-                                      ),
-                                      Center(child: new Text("Duration: "+list[i]['v_run'])),
-                                      Row(
-                                        children: [
-                                          new FlatButton(
-                                            child: const Text(""),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 25, left: 40, top: 25.0, bottom: 30.0),
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(15)),
-                                              child: FlatButton.icon(
-                                                  onPressed: () => Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) => Videoplayer())),
-                                                  icon: Icon(Icons.play_arrow_outlined,
-                                                      size: 30, color: Colors.black),
-                                                  label: Text('Play',
-                                                      style:
-                                                      TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold))),
+                            onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Image.network(
+                                          ApiService.BASE_URL +
+                                              list[i]['v_poster'],
+                                          fit: BoxFit.cover),
+                                      actions: [
+                                        Column(
+                                          children: [
+                                            Center(
+                                                child: new Text("Title: " +
+                                                    list[i]['v_title'])),
+                                          ],
+                                        ),
+                                        Center(
+                                            child: new Text("Duration: " +
+                                                list[i]['v_run'])),
+                                        Row(
+                                          children: [
+                                            new FlatButton(
+                                              child: const Text(""),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
                                             ),
-                                          ),
-
-                                        ],
-                                      ),
-                                  ],
-                                );
-                              },
-                            ),
-
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 25,
+                                                  left: 40,
+                                                  top: 25.0,
+                                                  bottom: 30.0),
+                                              child: Container(
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: FlatButton.icon(
+                                                    onPressed: () => Navigator
+                                                        .pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Videoplayer())),
+                                                    icon: Icon(
+                                                        Icons
+                                                            .play_arrow_outlined,
+                                                        size: 30,
+                                                        color: Colors.black),
+                                                    label: Text('Play',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold))),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                             icon: Icon(
                               Icons.info_outline_rounded,
                               size: 22.0,
                               color: Colors.white,
-                            )
-                        ),
+                            )),
                         IconButton(
-                            onPressed: ()=> showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                    actions: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right:100.0),
-                                      child: new FlatButton(
-                                        child: const Text('+ Add To Play List'),
-                                        onPressed: () {
-                                          addToPlayList(list[i]['v_id'],list[i]['v_title']);
+                            onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 100.0),
+                                          child: new FlatButton(
+                                            child: const Text(
+                                                '+ Add To Play List'),
+                                            onPressed: () {
+                                              addToPlayList(list[i]['v_id'],
+                                                  list[i]['v_title']);
 
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                             icon: Icon(
                               Icons.more_vert_sharp,
                               size: 22.0,
@@ -538,24 +568,21 @@ class Items extends StatelessWidget {
       },
     );
   }
-
 }
 
 addToPlayList(list, list2) async {
-    final response = await http
-        .post(ApiService.BASE_URL+"Add_PlayList", body: {
-      "v_id": list,"v_title": list2,"u_id":u_id
-    });
+  final response = await http.post(ApiService.BASE_URL + "Add_PlayList",
+      body: {"v_id": list, "v_title": list2, "u_id": u_id});
 
-    final data = jsonDecode(response.body);
-    bool value = data['error'];
-    String success = data['success'];
-    if (!value) {
-      print("Success: "+success);
-      addedSuccessToast(success);
-    }else {
-      addedSuccessToast(success);
-    }
+  final data = jsonDecode(response.body);
+  bool value = data['error'];
+  String success = data['success'];
+  if (!value) {
+    print("Success: " + success);
+    addedSuccessToast(success);
+  } else {
+    addedSuccessToast(success);
+  }
 }
 
 addedSuccessToast(String toast) {
@@ -567,6 +594,3 @@ addedSuccessToast(String toast) {
       backgroundColor: Colors.green,
       textColor: Colors.white);
 }
-
-
-

@@ -176,6 +176,31 @@ class Items extends StatelessWidget {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => Details()));
           },
+          trailing: IconButton(icon: Icon(Icons.more_vert_outlined),
+          onPressed: (){
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  actions: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(right: 100.0),
+                      child: new FlatButton(
+                        child: const Text('Remove From Lists'),
+                        onPressed: () {
+                          addToPlayList(list[i]['v_id'],
+                              list[i]['v_title']);
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },),
         );
       }
     );
