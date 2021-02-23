@@ -272,7 +272,7 @@ class _LoginState extends State<Login> {
                                 child: TextFormField(
                                   validator: (e) {
                                     if (e.isEmpty) {
-                                      return "Please Insert Email";
+                                      return "Please Enter Email";
                                     }
                                   },
                                   onSaved: (e) => email = e,
@@ -288,7 +288,7 @@ class _LoginState extends State<Login> {
                                         child:
                                         Icon(Icons.person),
                                       ),
-                                      contentPadding: EdgeInsets.all(18),
+                                      contentPadding: EdgeInsets.all(8),
                                       labelText: "Email"),
                                 ),
                               ),
@@ -322,7 +322,7 @@ class _LoginState extends State<Login> {
                                           ? Icons.visibility_off
                                           : Icons.visibility),
                                     ),
-                                    contentPadding: EdgeInsets.all(18),
+                                    contentPadding: EdgeInsets.all(8),
                                   ),
                                 ),
                               ),

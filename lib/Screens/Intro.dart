@@ -95,6 +95,7 @@ class _OnboardingScreenOne extends State<OnboardingScreenOne> {
     switch (_FirstTime) {
       case FirstTime.First:
         return Scaffold(
+          resizeToAvoidBottomPadding: false,
           body: Container(
             child: Stack(
               children: [
@@ -268,7 +269,11 @@ class OnboardingScreenTwo extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: double.infinity,
         child: Stack(
           children: [
             Column(
@@ -279,7 +284,7 @@ class OnboardingScreenTwo extends StatelessWidget {
                   child: ClipPath(
                     clipper: SlandingClipper(),
                     child: Container(
-                      height: size.height * 0.6,
+                      height: size.height * 0.5,
                       color: black,
                     ),
                   ),
@@ -305,7 +310,7 @@ class OnboardingScreenTwo extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Live TV',
+                        'CG Movies',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -317,7 +322,7 @@ class OnboardingScreenTwo extends StatelessWidget {
                         height: size.height * 0.02,
                       ),
                       Text(
-                        "Konda also present live Tv",
+                        "Konda also present Chhattisgarhi Movies",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 18,
@@ -430,6 +435,7 @@ class OnboardingScreenThree extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Container(
         child: Stack(
           children: [
@@ -463,7 +469,7 @@ class OnboardingScreenThree extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Web Series',
+                      'Premium Movies',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -475,7 +481,7 @@ class OnboardingScreenThree extends StatelessWidget {
                       height: size.height * 0.02,
                     ),
                     Text(
-                      'Konda Presents Web Series',
+                      'Konda Presents Premium Movies',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: 18,

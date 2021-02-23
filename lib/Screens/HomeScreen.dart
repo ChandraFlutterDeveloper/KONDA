@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.center,
               constraints: BoxConstraints.expand(height: 225),
               child: FutureBuilder<List>(
-                future: getMovie(),
+                future: getSlider(),
 
                 // ignore: missing_return
                 builder: (ctx, ss) {
@@ -145,95 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
-          /*<----------------Come Enjoy With Us------------->*/
-
-    /*      SliverToBoxAdapter(
-            child: SizedBox(
-              height: 284.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 20.0, right: 130.0, left: 10.0),
-                    child: Text('Come enjoy with us..',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 200,
-                      child: FutureBuilder<List>(
-                        future: getMovie(),
-
-                        // ignore: missing_return
-                        builder: (ctx, ss) {
-                          if (ss.hasError) {
-                            print('error');
-                          }
-                          if (ss.hasData) {
-                            return Items(list: ss.data);
-                          } else {
-                            return Center(
-                              child: const CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-
-          *//*<------------Popular SHows------------->*//*
-
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 261.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 200.0),
-                    child: Text('Popular Shows',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 200,
-                      child: FutureBuilder<List>(
-                        future: popularMovie(),
-
-                        // ignore: missing_return
-                        builder: (ctx, ss) {
-                          if (ss.hasError) {
-                            print('error');
-                          }
-                          if (ss.hasData) {
-                            return Items(list: ss.data);
-                          } else {
-                            return Center(
-                              child: const CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),*/
 
           /*<----------------Animated------------->*/
 
@@ -361,7 +272,7 @@ class Categories extends StatelessWidget {
 
   Future<List> getAnimated(list) async {
     final response = await http
-        .post(ApiService.BASE_URL + "Animated_List", body: {"c_id": list});
+        .post(ApiService.BASE_URL + "CategoryWise_movieList", body: {"c_id": list});
     return json.decode(response.body);
   }
 

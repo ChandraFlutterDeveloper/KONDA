@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart'as http;
 import 'dart:convert';
@@ -7,6 +8,8 @@ import 'package:konda_app/Screens/Details.dart';
 import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/Widgets/Video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+String u_id;
 
 void main() async {
 
@@ -19,7 +22,6 @@ class MyList extends StatefulWidget {
 
 class _MyListState extends State<MyList> {
 
-  String u_id;
   bool click;
 
   getPref() async {
@@ -94,6 +96,7 @@ class Items extends StatelessWidget {
   List list;
   videoDetail(String f_id,String f_title,String f_year,String f_starring,String f_descr,String f_age,String f_rating,String f_director,String f_genre,String f_poster,String f_run,String f_season) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    uid = preferences.getString("id");
     preferences.setString("f_id", f_id);
     preferences.setString("f_title", f_title);
     preferences.setString("f_year", f_year);
@@ -189,8 +192,7 @@ class Items extends StatelessWidget {
                       child: new FlatButton(
                         child: const Text('Remove From Lists'),
                         onPressed: () {
-                          addToPlayList(list[i]['v_id'],
-                              list[i]['v_title']);
+                          removeFromPlayList(list[i]['v_id']);
 
                           Navigator.pop(context);
                         },
@@ -205,6 +207,43 @@ class Items extends StatelessWidget {
       }
     );
   }
+
+
+
+}
+
+removeFromPlayList(list) async {
+  final response = await http.post(ApiService.BASE_URL + "Remove_From_PlayList",
+      body: {"v_id": list, "u_id": u_id});
+
+  final data = jsonDecode(response.body);
+  bool value = data['error'];
+  String success = data['success'];
+  if (!value) {
+    print("Success: " + success);
+    removeSuccessToast(success);
+  } else {
+    removeWarningToast(success);
+  }
 }
 
 
+removeSuccessToast(String toast) {
+  return Fluttertoast.showToast(
+      msg: toast,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white);
+}
+
+removeWarningToast(String toast) {
+  return Fluttertoast.showToast(
+      msg: toast,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.yellow,
+      textColor: Colors.white);
+}

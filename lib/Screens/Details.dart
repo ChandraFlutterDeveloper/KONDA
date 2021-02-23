@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:konda_app/Screens/MyList.dart';
 import 'package:konda_app/constants.dart';
 import 'package:konda_app/Widgets/Video.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -45,9 +46,18 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-
-
-  String id, title, genre, director, year, rating, descr, staring, poster, age, duration, season;
+  String id,
+      title,
+      genre,
+      director,
+      year,
+      rating,
+      descr,
+      staring,
+      poster,
+      age,
+      duration,
+      season;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -101,196 +111,252 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(slivers: <Widget>[
-      /*<-----------Top image----------->*/
-
-      SliverAppBar(
-        flexibleSpace: FlexibleSpaceBar(
-          background: Container(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 250,
-                  width: 150,
-                  child: Image.network(
-                      ApiService.BASE_URL+poster),
+        body: CustomScrollView(          //
+          controller: ScrollController(initialScrollOffset: 0),
+          physics: BouncingScrollPhysics(),
+          shrinkWrap: true,
+          slivers: <Widget>[
+            SliverAppBar(
+              floating: true,
+              pinned: false,
+              snap: false,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Padding(
+                  padding: const EdgeInsets.only(top:20.0),
+                  child: Image.asset("assets/images/logos.png",),
                 ),
-
-                /*<-----------Mid Row----------->*/
-
-                Padding(
-                  padding: const EdgeInsets.only(left:28.0,top: 8),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(title,textAlign:TextAlign.start ,
-                        style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:28.0,top: 8,bottom: 15),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Dutation: "+duration,textAlign:TextAlign.start ,
-                        style: TextStyle(color: Colors.white,fontSize: 18)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:12.0, bottom: 12.0, left: 4.0, right: 4.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(year,
-                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
-                        Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(2),
+              ),
+              expandedHeight: 57,
+            ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) => Column(
+                    children: [
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 225,
+                              width: 150,
+                              child: Image.network(ApiService.BASE_URL + poster),
                             ),
-                            child: Padding(
+
+                            /*<-----------Mid Row----------->*/
+
+                            Padding(
+                              padding: const EdgeInsets.only(left: 18.0, top: 8),
+                              child: Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(title,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                              const EdgeInsets.only( top: 8),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text("Duration: " + duration,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white, fontSize: 15)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 12.0, bottom: 12.0, left: 4.0, right: 4.0),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(year,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius: BorderRadius.circular(2),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(age,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold)),
+                                        )),
+                                    Text(season,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    Text(" | " + genre,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            /*<-----------Play Button----------->*/
+
+                            Padding(
+                              padding:
+                              const EdgeInsets.only(right: 25, left: 25, top: 25.0),
+                              child: Container(
+                                height: 35,
+                                width: 400,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: FlatButton.icon(
+                                    onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Videoplayer())),
+                                    icon: Icon(Icons.play_arrow_outlined,
+                                        size: 30, color: Colors.black),
+                                    label: Text('Play',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold))),
+                              ),
+                            ),
+
+                            /*<-----------Content----------->*/
+
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 40, left: 30, right: 20, bottom: 20),
+                                child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(descr,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white)),
+                                    ])
+                            ),
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(age,
-                                  style:
-                                  TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
-                            )),
-                        Text(season,
-                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
-                        Text(" | "+genre,
-                            style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                ),
+                              child: Container(
+                                  height: 50,
+                                  child: Text(staring,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold))),
+                            ),
 
-                /*<-----------Play Button----------->*/
+                            /*<-----------Last Row----------->*/
 
-                Padding(
-                  padding: const EdgeInsets.only(right: 25, left: 25, top: 25.0),
-                  child: Container(
-                    height: 35,
-                    width: 400,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: FlatButton.icon(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Videoplayer())),
-                        icon: Icon(Icons.play_arrow_outlined,
-                            size: 30, color: Colors.black),
-                        label: Text('Play',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold))),
-                  ),
-                ),
-
-                /*<-----------Content----------->*/
-
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 40, left: 30, right: 20, bottom: 20),
-                  child: Container(
-                      height: 50,
-                      child: Text(descr,textAlign:TextAlign.center,style: TextStyle(color: Colors.white))),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      height: 50,
-                      child: Text(staring,
-                          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold))),
-                ),
-
-                /*<-----------Last Row----------->*/
-
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      MaterialButton(
-                        onPressed: () {
-                          addToPlayList(id, title);
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Icon(Icons.add, color: Colors.white),
                             Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                'Add to List',
-                                style: TextStyle(color: Colors.white),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      MaterialButton(
+                                        onPressed: () {
+                                          addToPlayList(id, title);
+                                        },
+                                        child: Column(
+                                          children: <Widget>[
+                                            Icon(Icons.add, color: Colors.white),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 8.0),
+                                              child: Text(
+                                                'Add to List',
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      MaterialButton(
+                                        onPressed: null,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Icon(Icons.thumb_up_alt_outlined,
+                                                color: Colors.white),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 8.0),
+                                              child: Text(
+                                                rating,
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ],
                               ),
-                            )
+                            ),
+
                           ],
                         ),
-                      ),
-                      MaterialButton(
-                        onPressed: null,
-                        child: Column(
-                          children: <Widget>[
-                            Icon(Icons.thumb_up_alt_outlined,
-                                color: Colors.white),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                rating,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                          ],
-                        ),
+
+                        /*<-----------backgroung image----------->*/
+
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                  ApiService.BASE_URL + poster,
+                                ),
+                                fit: BoxFit.cover,
+                                colorFilter:
+                                ColorFilter.mode(Colors.black54, BlendMode.darken))),
                       ),
                     ],
                   ),
-                ),
-                Divider(
-                  color: Colors.grey.shade500,
-                )
-              ],
-            ),
+                  childCount: 1,
+                ))
+          ],
+        ));
+  }
 
-            /*<-----------backgroung image----------->*/
+  addToPlayList(list, list2) async {
+    final response = await http.post(ApiService.BASE_URL + "Add_PlayList",
+        body: {"v_id": list, "v_title": list2, "u_id": uid});
 
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(
-                      ApiService.BASE_URL+poster,
-                    ),
-                    fit: BoxFit.cover,
-                    colorFilter:
-                        ColorFilter.mode(Colors.black54, BlendMode.darken))),
-          ),
-        ),
-        expandedHeight: 790,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      )
-    ]));
+    final data = jsonDecode(response.body);
+    bool value = data['error'];
+    String success = data['success'];
+    if (!value) {
+      print("Success: " + success);
+      addedSuccessToast(success);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyList()));
+    } else {
+      addedWarningToast(success);
+    }
   }
 }
 
-addToPlayList(list, list2) async {
-  final response = await http
-      .post(ApiService.BASE_URL+"Add_PlayList", body: {
-    "v_id": list,"v_title": list2,"u_id":uid
-  });
-
-  final data = jsonDecode(response.body);
-  bool value = data['error'];
-  String success = data['success'];
-  if (!value) {
-    print("Success: "+success);
-    addedSuccessToast(success);
-  }else {
-    addedSuccessToast(success);
-  }
+addedWarningToast(String toast) {
+  return Fluttertoast.showToast(
+      msg: toast,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.amber,
+      textColor: Colors.white);
 }
 
 addedSuccessToast(String toast) {
@@ -302,10 +368,6 @@ addedSuccessToast(String toast) {
       backgroundColor: Colors.green,
       textColor: Colors.white);
 }
-
-
-
-
 
 Future<void> share() async {
   await FlutterShare.share(
