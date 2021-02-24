@@ -108,8 +108,7 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset(
-                          "assets/images/logos.png"),
+                      Image.asset("assets/icons/konda.png",height: 200,),
 
                       SizedBox(
                         height: 25,
@@ -119,7 +118,7 @@ class _RegisterState extends State<Register> {
                       SizedBox(
                         height: 50,
                         child: Text(
-                          "Register",
+                          "User Register",
                           style: TextStyle(color: Colors.white, fontSize: 30.0),
                         ),
                       ),

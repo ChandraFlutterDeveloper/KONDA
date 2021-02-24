@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -118,7 +117,60 @@ class _HomeScreenState extends State<HomeScreen> {
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).backgroundColor,
-      body: CustomScrollView(
+      body:SingleChildScrollView(
+        child: Column(
+          children: [
+        Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(5),
+        alignment: Alignment.center,
+        constraints: BoxConstraints.expand(height: 225),
+        child: FutureBuilder<List>(
+          future: getSlider(),
+
+          // ignore: missing_return
+          builder: (ctx, ss) {
+            if (ss.hasError) {
+              print('error');
+            }
+            if (ss.hasData) {
+              return ImageSlider(list: ss.data);
+            } else {
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      ),
+
+      SizedBox(
+        height: 313.0,
+        child: FutureBuilder<List>(
+          future: getCategory(),
+
+          // ignore: missing_return
+          builder: (ctx, ss) {
+            print("Aya");
+            if (ss.hasError) {
+              print(ss.error);
+            }
+            if (ss.hasData) {
+              return Categories(list: ss.data);
+            } else {
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            }
+          }, 
+        ),
+      ),
+
+          ],
+        ),
+      ),
+
+      /*CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -146,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          /*<----------------Animated------------->*/
+          *//*<----------------Animated------------->*//*
 
           SliverToBoxAdapter(
             child: SizedBox(
@@ -172,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
+      ),*/
     );
   }
 
@@ -208,6 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 /*<--------Slider-------------->*/
 
+// ignore: must_be_immutable
 class ImageSlider extends StatelessWidget {
   List list;
 
@@ -265,6 +318,7 @@ class ImageSlider extends StatelessWidget {
 
 /*<-------------Cards----------->*/
 
+// ignore: must_be_immutable
 class Categories extends StatelessWidget {
   List list;
 

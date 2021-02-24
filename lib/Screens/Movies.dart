@@ -120,7 +120,7 @@ class Items extends StatelessWidget {
       shrinkWrap: true,
       itemCount: list.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: width / (height * 0.77)),
+          crossAxisCount: 3, childAspectRatio: width / (height * 0.88)),
       itemBuilder: (ctx, i) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -146,7 +146,7 @@ class Items extends StatelessWidget {
             child: Card(
               child: Column(children: [
                 Image.network(ApiService.BASE_URL + list[i]['v_poster'],
-                    height: 124.0, width: 108.0, fit: BoxFit.cover),
+                    height: 124.4, width: 108.0, fit: BoxFit.cover),
                 LinearProgressIndicator(value: 50.0),
                 Row(
                   children: <Widget>[
