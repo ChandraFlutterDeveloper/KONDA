@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:konda_app/Screens/ProfileUpdate.dart';
 import 'package:konda_app/Screens/UserRegister.dart';
 import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/Service/ApiService.dart';
@@ -18,7 +19,7 @@ enum LoginStatus { notSignIn, signIn }
 
 class _LoginState extends State<Login> {
   LoginStatus _loginStatus = LoginStatus.notSignIn;
-  String mobileno, otpcode;
+  String mobileno, otpcode, name;
   final _key = new GlobalKey<FormState>();
 
   bool _secureText = true;
@@ -54,9 +55,9 @@ class _LoginState extends State<Login> {
     if (form.validate()) {
       form.save();
       if(mobileno!=null && otpcode!=null) {
-        login();
+        verfyOtp();
       }else{
-        generateOtp();
+        loginRegister();
       }
     }else{
       setState(() {
@@ -67,64 +68,34 @@ class _LoginState extends State<Login> {
 
   resendOtp() async
   {
-    final response = await http.post(ApiService.BASE_URL + "User_GenerateOtp",
+    final response = await http.post(ApiService.BASE_URL + "User_ResendOtp",
         body: {"mobile": mob});
 
     final data = jsonDecode(response.body);
     bool value = data['error'];
     String success = data['success'];
-    String mobile = data['mobile'];
 
     if (!value) {
       setState(() {
-        saveMobile(mobile);
         visible = false;
         viewVisible = false;
         hideVisible = true;
       });
-      print("Success: " + success);
-      loginSuccessToast(success);
+      print("Successfully: " + success);
+      loginSuccessToast("OTP Successfully Sended Check Your Inbox!");
     } else {
       setState(() {
         visible = false;
       });
       print("fail");
       print("Success: " + success);
-      loginFailedToast(success);
+      loginFailedToast("Oops somthing went wrong! Please try again later");
     }
   }
 
-  generateOtp() async
+  verfyOtp() async
   {
-    final response = await http.post(ApiService.BASE_URL + "User_GenerateOtp",
-        body: {"mobile": mobileno});
-
-    final data = jsonDecode(response.body);
-    bool value = data['error'];
-    String success = data['success'];
-    String mobile = data['mobile'];
-
-    if (!value) {
-      setState(() {
-        saveMobile(mobile);
-        visible = false;
-        viewVisible = false;
-        hideVisible = true;
-      });
-      print("Success: " + success);
-      loginSuccessToast(success);
-    } else {
-      setState(() {
-        visible = false;
-      });
-      print("fail");
-      print("Success: " + success);
-      loginFailedToast(success);
-    }
-  }
-
-  login() async {
-    final response = await http.post(ApiService.BASE_URL + "User_Signin",
+    final response = await http.post(ApiService.BASE_URL + "User_VerifyOtp",
         body: {"mobile": mobileno, "otp": otpcode});
 
     final data = jsonDecode(response.body);
@@ -132,21 +103,55 @@ class _LoginState extends State<Login> {
     String success = data['success'];
     String uemail = data['uemail'];
     String uname = data['uname'];
-    String otp = data['otp'];
-    String id = data['uid'];
-
+    String umobile = data['umobile'];
+    String uid = data['uid'];
+    print("Verify");
     if (!value) {
       setState(() {
         _loginStatus = LoginStatus.signIn;
-        savePref(otp, uemail, uname, id);
+        savePref(uemail, umobile, uname, uid);
         visible = false;
         viewVisible = false;
         hideVisible = true;
       });
       print("Success: " + success);
-      loginSuccessToast("Successfully Logged In!");
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => MainMenu(signOut)));
+      loginSuccessToast("Successfully logged in!");
+      if(uemail==null || uemail=="" || uemail==" ") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => ProfileUpdate()));
+      }else{
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => MainMenu(signOut)));
+      }
+    } else {
+      setState(() {
+        visible = false;
+      });
+      print("fail");
+      print("Oops Somthing went wrong! Please try again later");
+      loginFailedToast(success);
+    }
+  }
+
+  loginRegister() async {
+    final response = await http.post(ApiService.BASE_URL + "User_Signin",
+        body: {"mobile": mobileno, "name": name});
+
+    print("login register");
+    final data = jsonDecode(response.body);
+    bool value = data['error'];
+    String success = data['success'];
+    String mobile = data['mobile'];
+
+    if (!value) {
+      setState(() {
+        saveMobile(mobile);
+        visible = false;
+        viewVisible = false;
+        hideVisible = true;
+      });
+      print("Success: " + success);
+      loginSuccessToast("Please Verify Mobile Number With OTP!");
     } else {
       setState(() {
         visible = false;
@@ -177,14 +182,13 @@ class _LoginState extends State<Login> {
         textColor: Colors.white);
   }
 
-  savePref(String otp, String email, String name, String id) async {
+  savePref(String email, String mobile, String name, String id) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      preferences.setString("otp", otp);
       preferences.setString("name", name);
       preferences.setString("email", email);
       preferences.setString("id", id);
-      preferences.commit();
+      preferences.setString("mobile", mobile);
     });
   }
 
@@ -311,17 +315,17 @@ class _LoginState extends State<Login> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset("assets/icons/konda.png",height: 200,),
+                              Image.asset("assets/icons/konda.png",height: 170,),
                               SizedBox(
-                                height: 35,
+                                height: 25,
                               ),
 
                               SizedBox(
                                 height: 50,
                                 child: Text(
-                                  "User Login",
+                                  "USER LOGIN",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 30.0),
+                                      color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.bold),
                                 ),
                               ),
 
@@ -332,9 +336,37 @@ class _LoginState extends State<Login> {
                                   visible: visible,
                                   child: Container(
                                       margin:
-                                          EdgeInsets.only(top: 10, bottom: 10),
+                                          EdgeInsets.only( bottom: 10),
                                       child: CircularProgressIndicator())),
 
+                              //card for User Name TextFormField
+                              Card(
+                                elevation: 6.0,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextFormField(
+                                    validator: (e) {
+                                      if (e.isEmpty) {
+                                        return "Please enter user name";
+                                      }
+                                    },
+                                    onSaved: (e) => name = e,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                    decoration: InputDecoration(
+                                        prefixIcon: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 20, right: 15),
+                                          child: Icon(Icons.person_outline_outlined),
+                                        ),
+                                        contentPadding: EdgeInsets.all(8),
+                                        labelText: "Enter User Name"),
+                                  ),
+                                ),
+                              ),
                               //card for Mobile TextFormField
                               Card(
                                 elevation: 6.0,
@@ -364,7 +396,7 @@ class _LoginState extends State<Login> {
                                           child: Icon(Icons.phone_iphone_rounded),
                                         ),
                                         contentPadding: EdgeInsets.all(8),
-                                        labelText: "Enter Mobile No."),
+                                        labelText: "Enter Mobile Number"),
                                     keyboardType: TextInputType.number,
                                     inputFormatters: <TextInputFormatter>[
                                       FilteringTextInputFormatter.digitsOnly
@@ -428,18 +460,32 @@ class _LoginState extends State<Login> {
                                   height: 12,
                                 ),
 
+
                                 Visibility(
                                   visible: hideVisible,
-                                  child: FlatButton(
-                                    onPressed: (){
-                                        resendOtp();
-                                      },
-                                    child: Text(
-                                      "Resend OTP",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
+                                  child: Container(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text("Don't have an OTP?"),
+
+                                          FlatButton(
+                                            child: Row(
+                                              children: [
+                                                Text("RESEND OTP",
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                    ))],
+
+                                            ),
+                                            onPressed: () {
+                                              resendOtp();
+                                            }             ,
+
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -473,7 +519,7 @@ class _LoginState extends State<Login> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "GENERATE OTP",
+                                              "LOGIN",
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,

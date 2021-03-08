@@ -58,21 +58,24 @@ class _MoviesState extends State<Movies> {
               color: Colors.grey,
             )),
       ) : PreferredSize(preferredSize: Size(0.0, 0.0),child: Container(),),
-      body: FutureBuilder<List>(
-        future: getData(),
-        // ignore: missing_return
-        builder: (ctx, ss) {
-          if (ss.hasError) {
-            print('error');
-          }
-          if (ss.hasData) {
-            return Items(list: ss.data);
-          } else {
-            return Center(
-              child: const CircularProgressIndicator(),
-            );
-          }
-        },
+      body: Container(
+        height: double.infinity,
+        child: FutureBuilder<List>(
+          future: getData(),
+          // ignore: missing_return
+          builder: (ctx, ss) {
+            if (ss.hasError) {
+              print('error');
+            }
+            if (ss.hasData) {
+              return Items(list: ss.data);
+            } else {
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -116,88 +119,99 @@ class Items extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return GridView.builder(
-      shrinkWrap: true,
-      itemCount: list.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: width / (height * 0.88)),
-      itemBuilder: (ctx, i) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              videoDetail(
-                  list[i]['v_id'],
-                  list[i]['v_title'],
-                  list[i]['year'],
-                  list[i]['v_starring'],
-                  list[i]['v_description'],
-                  list[i]['v_age'],
-                  list[i]['v_rating'],
-                  list[i]['v_director'],
-                  list[i]['v_genre'],
-                  list[i]['v_poster'],
-                  list[i]['v_run'],
-                  list[i]['v_season']);
+    return Container(
+      height: double.infinity,
+      child: GridView.builder(
+        shrinkWrap: true,
+        itemCount: list.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, childAspectRatio: width / (height * 1.13)),
+        itemBuilder: (ctx, i) {
+          return Padding(
+            padding: const EdgeInsets.only(top:8.0,),
+            child: Column(
+              children: [
+                Card(
+                  child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        videoDetail(
+                            list[i]['v_id'],
+                            list[i]['v_title'],
+                            list[i]['year'],
+                            list[i]['v_starring'],
+                            list[i]['v_description'],
+                            list[i]['v_age'],
+                            list[i]['v_rating'],
+                            list[i]['v_director'],
+                            list[i]['v_genre'],
+                            list[i]['v_poster'],
+                            list[i]['v_run'],
+                            list[i]['v_season']);
 
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Details()));
-            },
-            child: Card(
-              child: Column(children: [
-                Image.network(ApiService.BASE_URL + list[i]['v_poster'],
-                    height: 124.4, width: 108.0, fit: BoxFit.cover),
-                LinearProgressIndicator(value: 50.0),
-                Row(
-                  children: <Widget>[
-                    IconButton(
-                        onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: Image.network(
-                                      ApiService.BASE_URL + list[i]['v_poster'],
-                                      fit: BoxFit.cover),
-                                  actions: [
-                                    Column(
-                                      children: [
-                                        Center(
-                                            child: new Text("Title: " +
-                                                list[i]['v_title'])),
-                                      ],
-                                    ),
-                                    Center(
-                                        child: new Text(
-                                            "Duration: " + list[i]['v_run'])),
-                                    Row(
-                                      children: [
-                                        new FlatButton(
-                                          child: const Text(""),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 25,
-                                              left: 20,
-                                              top: 25.0,
-                                              bottom: 30.0),
-                                          child: Container(
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Details()));
+                      },
+                      child: Container(
+                        width: 100,
+                        child: Column(children: [
+                          Image.network(ApiService.BASE_URL + list[i]['v_poster'],
+                              height: 124.0, width: 100.0, fit: BoxFit.cover),
+                          LinearProgressIndicator(value: 50.0),
+                        ]),
+                      )),
+                ),
+                Card(
+                  child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Image.network(
+                                        ApiService.BASE_URL +
+                                            list[i]['v_poster'],
+                                        fit: BoxFit.cover),
+                                    actions: [
+                                      Column(
+                                        children: [
+                                          Center(
+                                              child: new Text("Title: " +
+                                                  list[i]['v_title'])),
+                                        ],
+                                      ),
+                                      Center(
+                                          child: new Text("Duration: " +
+                                              list[i]['v_run'])),
+                                      Row(
+                                        children: [
+                                          new FlatButton(
+                                            child: const Text(""),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          Container(
                                             height: 35,
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(15)),
+                                                BorderRadius.circular(
+                                                    15)),
                                             child: FlatButton.icon(
-                                                onPressed: () =>
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                Videoplayer())),
+                                                onPressed: () => Navigator
+                                                    .pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder:
+                                                            (context) =>
+                                                            Videoplayer())),
                                                 icon: Icon(
-                                                    Icons.play_arrow_outlined,
+                                                    Icons
+                                                        .play_arrow_outlined,
                                                     size: 30,
                                                     color: Colors.black),
                                                 label: Text('Play',
@@ -205,55 +219,59 @@ class Items extends StatelessWidget {
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.bold))),
+                                                        FontWeight
+                                                            .bold))),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                        icon: Icon(
-                          Icons.info_outline_rounded,
-                          size: 22.0,
-                          color: Colors.white,
-                        )),
-                    IconButton(
-                        onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  actions: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 100.0),
-                                      child: new FlatButton(
-                                        child: const Text('+ Add To Play List'),
-                                        onPressed: () {
-                                          addToPlayList(list[i]['v_id'],
-                                              list[i]['v_title']);
-
-                                          Navigator.pop(context);
-                                        },
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                        icon: Icon(
-                          Icons.more_vert_sharp,
-                          size: 22.0,
-                          color: Colors.white,
-                        )),
-                  ],
-                )
-              ]),
+                                    ],
+                                  );
+                                },
+                              ),
+                              icon: Icon(
+                                Icons.info_outline_rounded,
+                                size: 22.0,
+                                color: Colors.white,
+                              )),
+                          IconButton(
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 100.0),
+                                        child: new FlatButton(
+                                          child: const Text(
+                                              '+ Add To Play List'),
+                                          onPressed: () {
+                                            addToPlayList(list[i]['v_id'],
+                                                list[i]['v_title']);
+
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              icon: Icon(
+                                Icons.more_vert_sharp,
+                                size: 22.0,
+                                color: Colors.white,
+                              )),
+                        ],
+                      )
+                  ),
+                ),
+              ],
             ),
-          ),
-        );
-      },
+
+          );
+        },
+      ),
     );
   }
 }

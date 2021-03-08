@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:konda_app/Screens/Movies.dart';
 import 'package:konda_app/Screens/MyList.dart';
-import 'package:konda_app/Screens/Privacy%20Policy.dart';
+import 'package:konda_app/Screens/PrivacyPolicy.dart';
 import 'package:konda_app/Screens/Profile.dart';
 import 'package:konda_app/Screens/Search.dart';
 import 'package:konda_app/Widgets/profile_list_item.dart';
@@ -28,73 +28,7 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  File _image;
 
-  final picker = ImagePicker();
-
-
-  _imgFromCamera() async {
-    var pickedImage = await picker.getImage(source: ImageSource.camera, imageQuality: 50);
-    setState(() {
-      _image = File(pickedImage.path);
-    });
-  }
-
-  _imgFromGallery() async {
-    var pickedImage = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
-    setState(() {
-      _image = File(pickedImage.path);
-    });
-  }
-
-  void _showPicker(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-    );
-  }
-
-
-  Future uploadImage()async{
-    final uri = Uri.parse("https://konda.co.in/image_upload");
-    var request = http.MultipartRequest('POST',uri);
-    var pic = await http.MultipartFile.fromPath("image", _image.path);
-    request.files.add(pic);
-    var response = await request.send();
-
-    if (response.statusCode == 200) {
-      print('Image Uploded');
-    }else{
-      print('Image Not Uploded');
-    }
-    setState(() {
-
-    });
-  }
 
   signOut() {
     setState(() {
@@ -115,7 +49,7 @@ class _MainMenuState extends State<MainMenu> {
 
   // String selectedIndex = 'TAB: 0';
 
-  String email = "", name = "", id = "";
+  String email = "", name = "", id = "", mob = "";
   TabController tabController;
 
   getPref() async {
@@ -124,10 +58,12 @@ class _MainMenuState extends State<MainMenu> {
       id = preferences.getString("id");
       email = preferences.getString("email");
       name = preferences.getString("name");
+      mob = preferences.getString("mobile");
 
       print("id: " + id);
       print("user: " + email);
       print("name: " + name);
+      print("mobile: " + mob);
     });
   }
 
@@ -203,8 +139,8 @@ class _MainMenuState extends State<MainMenu> {
       child: Column(
         children: <Widget>[
           Container(
-            height: SpacingUnit.w * 10,
-            width: SpacingUnit.w * 10,
+            height: SpacingUnit.w * 15,
+            width: SpacingUnit.w * 15,
             margin: EdgeInsets.only(top: SpacingUnit.w * 3),
             child: Stack(
               children: <Widget>[
@@ -212,62 +148,43 @@ class _MainMenuState extends State<MainMenu> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: _image == null  //profilePhoto which is File object
-                                ? AssetImage(
-                                "assets/images/avtar.png")
-                                : FileImage(_image), // picked file
+                            image: AssetImage(
+                                "assets/icons/konda.png"),// picked file
                             fit: BoxFit.fill)),
                   ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: SpacingUnit.w * 2.5,
-                    width: SpacingUnit.w * 2.5,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      heightFactor: SpacingUnit.w * 1.5,
-                      widthFactor: SpacingUnit.w * 1.5,
-                      child: GestureDetector(
-                        onTap: () {
-                          _showPicker(context);
-                        },
-                        child: Icon(
-                          LineAwesomeIcons.retro_camera,
-                          color: DarkPrimaryColor,
-                          size: ScreenUtil().setSp(SpacingUnit.w * 1.5),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
-          SizedBox(height: SpacingUnit.w * 2),
+          SizedBox(height: SpacingUnit.w * 1),
           Text(
-            'Konda User',
+            name,
+            style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: SpacingUnit.w * 0.5),
+          Text(
+            mob,
             style: TitleTextStyle,
           ),
           SizedBox(height: SpacingUnit.w * 0.5),
           Text(
-            'konda@gmail.com',
+            email,
             style: CaptionTextStyle,
           ),
           SizedBox(height: SpacingUnit.w * 2),
-          Container(
-            height: SpacingUnit.w * 4,
-            width: SpacingUnit.w * 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SpacingUnit.w * 3),
-              color: Theme.of(context).accentColor,
-            ),
-            child: Center(
-              child: Text(
-                'Upgrade to PRO',
-                style: ButtonTextStyle,
+          Padding(
+            padding: const EdgeInsets.only(bottom:18.0),
+            child: Container(
+              height: SpacingUnit.w * 4,
+              width: SpacingUnit.w * 20,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SpacingUnit.w * 3),
+                color: Theme.of(context).accentColor,
+              ),
+              child: Center(
+                child: Text(
+                  'Upgrade to PRO',
+                  style: ButtonTextStyle,
+                ),
               ),
             ),
           ),
@@ -418,13 +335,6 @@ class _MainMenuState extends State<MainMenu> {
         fontSize: 16.0);
   }
 
-  _openCamera() async {
-    // ignore: deprecated_member_use
-    _image = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (_image != null) {
-      debugPrint(_image.path);
-    }
-  }
 }
 
 Future<void> share() async {

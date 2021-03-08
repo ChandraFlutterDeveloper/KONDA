@@ -122,7 +122,7 @@ class _DetailsState extends State<Details> {
               snap: false,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top:20.0),
+                  padding: const EdgeInsets.only(top:28.0),
                   child: Image.asset("assets/images/logos.png",),
                 ),
               ),

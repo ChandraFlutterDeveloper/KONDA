@@ -117,64 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).backgroundColor,
-      body:SingleChildScrollView(
-        child: Column(
-          children: [
-        Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(5),
-        alignment: Alignment.center,
-        constraints: BoxConstraints.expand(height: 225),
-        child: FutureBuilder<List>(
-          future: getSlider(),
-
-          // ignore: missing_return
-          builder: (ctx, ss) {
-            if (ss.hasError) {
-              print('error');
-            }
-            if (ss.hasData) {
-              return ImageSlider(list: ss.data);
-            } else {
-              return Center(
-                child: const CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-      ),
-
-      SizedBox(
-        height: 313.0,
-        child: FutureBuilder<List>(
-          future: getCategory(),
-
-          // ignore: missing_return
-          builder: (ctx, ss) {
-            print("Aya");
-            if (ss.hasError) {
-              print(ss.error);
-            }
-            if (ss.hasData) {
-              return Categories(list: ss.data);
-            } else {
-              return Center(
-                child: const CircularProgressIndicator(),
-              );
-            }
-          }, 
-        ),
-      ),
-
-          ],
-        ),
-      ),
-
-      /*CustomScrollView(
+      body: CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: Container(
-              padding: EdgeInsets.all(10),
               margin: EdgeInsets.all(5),
               alignment: Alignment.center,
               constraints: BoxConstraints.expand(height: 225),
@@ -198,11 +144,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          *//*<----------------Animated------------->*//*
+        /*   <----------------Animated------------->*/
 
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 313.0,
+              height: 425.0,
               child: FutureBuilder<List>(
                 future: getCategory(),
 
@@ -224,7 +170,60 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+
+      /*SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(5),
+              alignment: Alignment.center,
+              constraints: BoxConstraints.expand(height: 200),
+              child: FutureBuilder<List>(
+                future: getSlider(),
+
+                // ignore: missing_return
+                builder: (ctx, ss) {
+                  if (ss.hasError) {
+                    print('error');
+                  }
+                  if (ss.hasData) {
+                    return ImageSlider(list: ss.data);
+                  } else {
+                    return Center(
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(
+              height: 425.0,
+              child: FutureBuilder<List>(
+                future: getCategory(),
+
+                // ignore: missing_return
+                builder: (ctx, ss) {
+                  print("Aya");
+                  if (ss.hasError) {
+                    print(ss.error);
+                  }
+                  if (ss.hasData) {
+                    return Categories(list: ss.data);
+                  } else {
+                    return Center(
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),*/
+
+
     );
   }
 
@@ -276,15 +275,9 @@ class ImageSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Swiper(
       autoplay: true,
-      layout: SwiperLayout.CUSTOM,
-      customLayoutOption: new CustomLayoutOption(startIndex: -1, stateCount: 3)
-          .addRotate([-45.0 / 180, 0.0, 45.0 / 180]).addTranslate([
-        new Offset(-340.0, -40.0),
-        new Offset(0.0, 0.0),
-        new Offset(340.0, -40.0)
-      ]),
-      itemWidth: 300.0,
-      itemHeight: 200.0,
+      layout: SwiperLayout.STACK,
+      itemWidth: 330.0,
+      itemHeight: 150.0,
       itemCount: list == null ? 0 : list.length,
       itemBuilder: (ctx, i) {
         return GestureDetector(
@@ -325,8 +318,9 @@ class Categories extends StatelessWidget {
   Categories({this.list});
 
   Future<List> getAnimated(list) async {
-    final response = await http
-        .post(ApiService.BASE_URL + "CategoryWise_movieList", body: {"c_id": list});
+    final response = await http.post(
+        ApiService.BASE_URL + "CategoryWise_movieList",
+        body: {"c_id": list});
     return json.decode(response.body);
   }
 
@@ -357,7 +351,7 @@ class Categories extends StatelessWidget {
 
                   // ignore: missing_return
                   builder: (ctx, ss) {
-                    print("Aya");
+                    // print("Aya");
                     if (ss.hasError) {
                       print(ss.error);
                     }
@@ -449,40 +443,33 @@ class Items extends StatelessWidget {
                                                 Navigator.pop(context);
                                               },
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 25,
-                                                  left: 40,
-                                                  top: 25.0,
-                                                  bottom: 30.0),
-                                              child: Container(
-                                                height: 35,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15)),
-                                                child: FlatButton.icon(
-                                                    onPressed: () => Navigator
-                                                        .pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        Videoplayer())),
-                                                    icon: Icon(
-                                                        Icons
-                                                            .play_arrow_outlined,
-                                                        size: 30,
-                                                        color: Colors.black),
-                                                    label: Text('Play',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold))),
-                                              ),
+                                            Container(
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                              child: FlatButton.icon(
+                                                  onPressed: () => Navigator
+                                                      .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Videoplayer())),
+                                                  icon: Icon(
+                                                      Icons
+                                                          .play_arrow_outlined,
+                                                      size: 30,
+                                                      color: Colors.black),
+                                                  label: Text('Play',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .bold))),
                                             ),
                                           ],
                                         ),

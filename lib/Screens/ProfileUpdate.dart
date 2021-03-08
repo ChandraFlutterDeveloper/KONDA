@@ -1,9 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:konda_app/constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:konda_app/MainMenu.dart';
 import 'package:konda_app/Screens/HomeScreen.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:konda_app/Screens/registration.dart';
+import 'package:konda_app/Screens/UserLogin.dart';
+import 'package:konda_app/Screens/UserRegister.dart';
+import 'package:konda_app/Service/ApiService.dart';
 import 'package:konda_app/constants.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 String u_id = '';
 void main() {
@@ -36,18 +49,67 @@ class ProfileUpdate extends StatefulWidget {
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
 
-  TextEditingController u_name = TextEditingController();
-  TextEditingController u_pass = TextEditingController();
+  File _image;
+  final picker = ImagePicker();
 
   bool click;
+  bool visible = false;
 
-  getPref() async {
+  String name, email, mobile, password;
+  final _key = new GlobalKey<FormState>();
+
+  bool _secureText = true;
+
+  _imgFromCamera() async {
+    var pickedImage = await picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    setState(() {
+      _image = File(pickedImage.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    var pickedImage = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    setState(() {
+      _image = File(pickedImage.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+  savePref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      u_id = preferences.getString("id");
-      click = preferences.getBool('clickFun');
+      preferences.setBool('clickFun',true);
     });
-
   }
 
   @override
@@ -58,86 +120,267 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
   }
 
 
-  bool _isHidden = true;
+  Future uploadImage()async{
+    final uri = Uri.parse(ApiService.BASE_URL+"Profile_image_upload");
+    var request = http.MultipartRequest('POST',uri);
+    request.fields['u_id'] = u_id;
+    var pic = await http.MultipartFile.fromPath("image", _image.path);
+    request.files.add(pic);
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Image Uploded');
+    }else{
+      print('Image Not Uploded');
+    }
+  }
 
-  void _toggleVisibility() {
+
+  showHide() {
     setState(() {
-      _isHidden = !_isHidden;
+      _secureText = !_secureText;
     });
   }
+
+  loadProgress(){
+
+    setState(() {
+      visible = true;
+    });
+    check();
+  }
+
+  check() {
+    final form = _key.currentState;
+    if (form.validate()) {
+      form.save();
+      save();
+    }
+  }
+
+  save() async {
+    final response = await http
+        .post(ApiService.BASE_URL+"User_Signup", body: {
+      "name": name,
+      "email": email,
+      "mobile": mobile,
+      "password": password
+    });
+
+    final data = jsonDecode(response.body);
+    bool value = data['error'];
+    String success = data['success'];
+    if (!value) {
+      setState(() {
+        visible = false;
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) =>Login()));
+      });
+      print("Success: "+success);
+      registerSuccessToast("Successfuly Registered...!");
+    } else {
+      setState(() {
+        visible = false;
+      });
+      print("Success: "+success);
+      registerFailedToast("Something Went Wrong...!");
+    }
+  }
+
+  registerSuccessToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
+  }
+
+  registerFailedToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white);
+  }
+
+  TextEditingController u_name = TextEditingController();
+  TextEditingController u_pass = TextEditingController();
+
+
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      u_id = preferences.getString("id");
+      click = preferences.getBool('clickFun');
+    });
+
+  }
+
+  signOut() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setString("mobile", null);
+      preferences.setString("name", null);
+      preferences.setString("email", null);
+      preferences.setString("id", null);
+      preferences.setString("otp", null);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Login(),
+        ),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-        padding:
-            EdgeInsets.only(top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+      appBar: click ? AppBar(
+        title:
+        Text(
+          'Update Profile',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.grey,
+            )),
+      ) : PreferredSize(preferredSize: Size(0.0, 0.0),child: Container(),),
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(15.0),
           children: <Widget>[
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
 
-            Image.asset("assets/icons/konda.png",height: 150,),
+                child: Form(
+                  key: _key,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
 
-            Text(
-              "SIGN IN",
-              style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold),
+                      Stack(alignment: Alignment.center, children: [
 
-            ),
-            SizedBox(
-              height: 40.0,
-            ),
-            buildTextField("Enter Your Mobile No."),
-            SizedBox(
-              height: 20.0,
-            ),
-            buildTextField("Enter OTP"),
-            SizedBox(
-              height: 20.0,
-            ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    "Resend OTP",
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: _image == null  //profilePhoto which is File object
+                                          ? AssetImage(
+                                          "assets/icons/konda.png")
+                                          : FileImage(_image), // picked file
+                                      fit: BoxFit.fill)),
+                            ),
+                          ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 100, top: 120),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: SpacingUnit.w * 2.5,
+                              width: SpacingUnit.w * 2.5,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).accentColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+
+                                  _showPicker(context);
+                                  //    choiceImage();
+
+                                },
+                                child: Icon(
+                                  LineAwesomeIcons.retro_camera,
+                                  color: DarkPrimaryColor,
+                                  size: ScreenUtil().setSp(SpacingUnit.w * 2),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+
+                      SizedBox(
+                        height: 25,
+                      ),
+
+
+                      SizedBox(
+                        height: 50,
+                        child: Text(
+                          "USER PROFILE",
+                          style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+
+                      Visibility(
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: visible,
+                          child: Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: CircularProgressIndicator()
+                          )
+                      ),
+                      buildTextField("Enter Your Mobile No."),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      buildTextField("Enter OTP"),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      SizedBox(height: 20.0),
+                      buildButtonContainer(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Skip at the time?"),
+
+                              FlatButton(
+                                child: Row(
+                                  children: [
+                                    Text("CLICK HERE",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ))],
+
+                                ),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context, MaterialPageRoute(builder: (context) => MainMenu(signOut)));
+                                }
+
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            buildButtonContainer(),
-            SizedBox(
-              height: 10.0,
-            ),
-            Container(
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Don't have an account?"),
-
-                     FlatButton(
-                     child: Row(
-                       children: [
-                         Text("SIGN UP",
-                           style: TextStyle(
-                             color: Colors.blue,
-                           ))],
-
-                     ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => Register()));
-                      }             ,
-
-                    )
-                  ],
                 ),
               ),
             ),
@@ -146,6 +389,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
       ),
     );
   }
+
 
   Widget buildTextField(String hintText) {
     return TextField(
@@ -161,16 +405,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
         prefixIcon: hintText == "Enter Your Mobile No."
             ? Icon(Icons.phone_android_outlined)
             : Icon(Icons.messenger_outline),
-        suffixIcon: hintText == "Enter OTP"
-            ? IconButton(
-                onPressed: _toggleVisibility,
-                icon: _isHidden
-                    ? Icon(Icons.visibility_off)
-                    : Icon(Icons.visibility),
-              )
-            : null,
       ),
-      obscureText: hintText == "Enter OTP" ? _isHidden : false,
     );
   }
 
@@ -178,7 +413,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
     return GestureDetector(
       onTap: (){
 
-         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       },
       child: Container(
         //onTap:()=> Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -194,7 +429,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
         ),
         child: Center(
           child: Text(
-            "GENERATE OTP",
+            "UPDATE",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
